@@ -62,7 +62,7 @@ Allihoopa.setup({
 This must be called before any other API calls can be made. Provide the
 application identifier and API key you got when you registered your app. If
 you're interested in getting your app up and running with Allihoopa, contact us
-at [info@allihoopa.com](mailto:info@allihoopa.com).
+at [developer@allihoopa.com](mailto:developer@allihoopa.com).
 
 
 ## Authenticating users
