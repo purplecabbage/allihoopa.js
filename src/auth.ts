@@ -56,14 +56,15 @@ export function authenticate(callback: AuthCallback) {
 
     pollTimer = window.setInterval(() => {
         if (popup.closed) {
-            cleanupListeners();
-
             // There is a possible race condition where the window might close
             // itself *before* the postMessage arrives.
             //
             // This setInterval gives the message 100ms to arrive before
             // considering the auth cancelled.
-            setInterval(() => callCallback(false), 100);
+            setInterval(() => {
+                cleanupListeners();
+                callCallback(false);
+            }, 100);
         }
     }, 100);
 
