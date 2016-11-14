@@ -14,7 +14,7 @@ fi
 
 WEBPACK_EXTRA=
 
-if [ -n "${TRAVIS_TAG+set}" ]; then 
+if [ -n "${TRAVIS_TAG+set}" ]; then
     if [ "${TRAVIS_TAG?}" != "" ]; then
         echo "Tagging release for ${TRAVIS_TAG}"
         echo
@@ -23,12 +23,16 @@ if [ -n "${TRAVIS_TAG+set}" ]; then
     fi
 fi
 
+WEBPACK=./node_modules/.bin/webpack
+
 ./scripts/clean.sh
 
 ./node_modules/.bin/typings install
 ./node_modules/.bin/tsc --declaration
 
-./node_modules/.bin/webpack $WEBPACK_EXTRA
-./node_modules/.bin/webpack --production $WEBPACK_EXTRA
-./node_modules/.bin/webpack --externalReact $WEBPACK_EXTRA
-./node_modules/.bin/webpack --externalReact --production $WEBPACK_EXTRA
+$WEBPACK $WEBPACK_EXTRA
+$WEBPACK --production $WEBPACK_EXTRA
+$WEBPACK --externalReact $WEBPACK_EXTRA
+$WEBPACK --externalReact --production $WEBPACK_EXTRA
+$WEBPACK --headless $WEBPACK_EXTRA
+$WEBPACK --headless --production $WEBPACK_EXTRA

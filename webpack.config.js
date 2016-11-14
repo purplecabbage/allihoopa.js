@@ -8,6 +8,11 @@ var plugins = [
 ];
 var externals = {};
 
+var entryPoints = [
+    './src/index-bundle.js',
+    './src/ui-bundle.js',
+];
+
 var outputBasename = 'allihoopa-standalone';
 if (yargs.argv.externalReact) {
     outputBasename = 'allihoopa';
@@ -15,6 +20,12 @@ if (yargs.argv.externalReact) {
         'react': 'React',
         'react-dom': 'ReactDOM',
     };
+} else if (yargs.argv.headless) {
+    outputBasename = 'allihoopa-headless';
+
+    entryPoints = [
+        './src/index-bundle.js',
+    ]
 }
 
 if (yargs.argv.versionTag) {
@@ -39,7 +50,7 @@ if (yargs.argv.production) {
 }
 
 module.exports = {
-    entry: './src/index-bundle.js',
+    entry: entryPoints,
     output: {
         path: path.join(__dirname, '/dist'),
         filename: outputFilename,

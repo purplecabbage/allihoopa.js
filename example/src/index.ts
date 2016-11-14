@@ -1,4 +1,5 @@
 import * as Allihoopa from 'allihoopa';
+import * as AllihoopaUI from 'allihoopa/ui';
 
 declare const ALLIHOOPA_APP_IDENTIFIER: string;
 declare const ALLIHOOPA_API_KEY: string;
@@ -56,7 +57,7 @@ dropButton.addEventListener('click', () => {
         },
     });
 
-    Allihoopa.drop(piece, (success) => {
+    AllihoopaUI.drop(piece, (success) => {
         const p = document.createElement('pre');
         p.innerText = JSON.stringify(success ? 'Drop successful' : 'Drop cancelled');
 
