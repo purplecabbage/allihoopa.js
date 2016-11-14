@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import {Coordinator} from './drop-ui/components/Coordinator';
-import {Overlay} from './drop-ui/components/Overlay';
-import {DropPiece} from './drop/PieceData';
+import {authenticate} from '../auth';
+import {DropPiece} from '../drop/PieceData';
 
-import {authenticate} from './auth';
+import {Controller} from './components/Coordinator';
+import {Overlay} from './components/Overlay';
 
 export type DropCallback = (successful: boolean) => void;
 
@@ -50,7 +50,7 @@ function renderDrop(piece: DropPiece, callback: DropCallback) {
 
     ReactDOM.render(
         <Overlay>
-            <Coordinator
+            <Controller
                 input={piece}
                 onClose={onClose}
                 onDropComplete={onComplete}

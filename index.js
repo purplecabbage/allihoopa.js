@@ -1,2 +1,8 @@
 "use strict";
-exports = require('./lib/src/index');
+var mod = require('./lib/src/index');
+
+for (var key in mod) {
+    if (mod.hasOwnProperty(key)) {
+        exports[key] = mod[key];
+    }
+}

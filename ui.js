@@ -1,2 +1,9 @@
 "use strict";
-exports = require('./lib/src/ui');
+
+var mod = require('./lib/src/ui');
+
+for (var key in mod) {
+    if (mod.hasOwnProperty(key)) {
+        exports[key] = mod[key];
+    }
+}

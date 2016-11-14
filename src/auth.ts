@@ -39,6 +39,7 @@ export function authenticate(callback: AuthCallback) {
             callbackFired = true;
 
             if (callback) {
+                console.log('[Allihoopa SDK] authentication completed', value);
                 callback(value);
             }
         }
