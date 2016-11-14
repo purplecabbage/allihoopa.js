@@ -1,8 +1,8 @@
 import * as Radium from 'radium';
 import * as React from 'react';
 
+import {CreatedPiece} from '../../drop/DropInterfaces';
 import * as CommonStyles from '../styles/CommonStyles';
-import {CreatedPiece} from '../DropInterfaces';
 
 import {Checkmark} from '../../icons/Checkmark';
 

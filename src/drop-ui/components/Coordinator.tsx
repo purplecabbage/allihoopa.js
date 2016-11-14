@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import {getApplicationIdentifier} from '../../config';
 import {graphQLQuery, Result} from '../../graphql';
-import * as DropAPI from '../DropAPI';
-import {CreatedPiece, PieceInput} from '../DropInterfaces';
-import {DropPiece} from '../PieceData';
+
+import * as DropAPI from '../../drop/DropAPI';
+import {CreatedPiece, PieceInput} from '../../drop/DropInterfaces';
+import {DropPiece} from '../../drop/PieceData';
 
 import {EditInfo, EditInfoState} from './edit-info/EditInfo';
 import {CompletedView} from './CompletedView';

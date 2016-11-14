@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import {Coordinator} from './drop/components/Coordinator';
-import {Overlay} from './drop/components/Overlay';
+import {Coordinator} from './drop-ui/components/Coordinator';
+import {Overlay} from './drop-ui/components/Overlay';
 import {DropPiece} from './drop/PieceData';
 
 import {authenticate} from './auth';
