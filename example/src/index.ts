@@ -66,6 +66,9 @@ dropWithoutUIButton.addEventListener('click', () => {
 });
 
 function makeDropPiece(): Allihoopa.DropPiece {
+    const attribution = document.querySelector('#js-attribution') as HTMLTextAreaElement;
+    console.assert(!!attribution);
+
     return new Allihoopa.DropPiece({
         stems: {
             mixStem: (completion: (data: Blob | null, error: Error | null) => void) => {
@@ -97,7 +100,7 @@ function makeDropPiece(): Allihoopa.DropPiece {
             },
         },
         attribution: {
-            basedOnPieces: [],
+            basedOnPieces: attribution.value.trim() ? attribution.value.trim().split('\n') : [],
         },
     });
 }
