@@ -3,7 +3,7 @@ import * as React from 'react';
 import {getApplicationIdentifier} from '../../config';
 import {graphQLQuery, Result} from '../../graphql';
 
-import {Coordinator} from '../../drop/Coordinator';
+import {Coordinator, DropCompletionCallback} from '../../drop/Coordinator';
 import {CreatedPiece} from '../../drop/DropInterfaces';
 import {DropPiece} from '../../drop/PieceData';
 
@@ -38,7 +38,7 @@ export interface ControllerState {
 export interface ControllerProps {
     input: DropPiece;
     onClose: () => void;
-    onDropComplete: () => void;
+    onDropComplete: DropCompletionCallback;
 }
 
 export class Controller extends React.Component<ControllerProps, ControllerState> {
@@ -65,6 +65,8 @@ export class Controller extends React.Component<ControllerProps, ControllerState
                 else if (error) {
                     this.setState({ createdPieceResult: { status: 'ERROR', error: error }} as ControllerState);
                 }
+
+                this.props.onDropComplete(piece, error);
             },
             onInitialCoverImageDidArrive: image => {
                 this.setState({ initialCoverImage: image } as ControllerState);

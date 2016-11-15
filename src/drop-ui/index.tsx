@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import {authenticate} from '../auth';
+import {DropCompletionCallback} from '../drop/Coordinator';
+import {CreatedPiece} from '../drop/DropInterfaces';
 import {DropPiece} from '../drop/PieceData';
 
 import {Controller} from './components/Controller';
@@ -9,7 +11,7 @@ import {Overlay} from './components/Overlay';
 
 export type DropCallback = (successful: boolean) => void;
 
-export function drop(piece: DropPiece, callback: DropCallback) {
+export function drop(piece: DropPiece, callback: DropCompletionCallback) {
     if (!piece) {
         throw new Error('Piece argument not provided');
     }
@@ -29,23 +31,25 @@ export function drop(piece: DropPiece, callback: DropCallback) {
     });
 }
 
-function renderDrop(piece: DropPiece, callback: DropCallback) {
+function renderDrop(piece: DropPiece, callback: DropCompletionCallback) {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
-    let successful = false;
+    let createdPiece: CreatedPiece | null = null;
+    let error: Error | null = null;
 
     const onClose = () => {
         ReactDOM.unmountComponentAtNode(container);
         container.parentNode.removeChild(container);
 
         if (callback) {
-            callback(successful);
+            callback(createdPiece, error);
         }
     };
 
-    const onComplete = () => {
-        successful = true;
+    const onComplete: DropCompletionCallback = (piece, error) => {
+        createdPiece = piece;
+        error = error;
     };
 
     ReactDOM.render(
