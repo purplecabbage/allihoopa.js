@@ -37,23 +37,32 @@ dropButton.addEventListener('click', () => {
 });
 
 dropWithoutUIButton.addEventListener('click', () => {
-    Allihoopa.drop(makeDropPiece(), piece => {
-        if (piece) {
-            const a = document.createElement('a');
-            a.innerText = piece.title;
-            a.setAttribute('href', piece.url);
-            a.setAttribute('style', 'display: block');
-            a.setAttribute('target', '_blank');
+    Allihoopa.drop(
+        makeDropPiece(),
+        piece => {
+            if (piece) {
+                const a = document.createElement('a');
+                a.innerText = piece.title;
+                a.setAttribute('href', piece.url);
+                a.setAttribute('style', 'display: block');
+                a.setAttribute('target', '_blank');
 
-            document.body.appendChild(a);
-        }
-        else {
+                document.body.appendChild(a);
+            }
+            else {
+                const p = document.createElement('pre');
+                p.innerText = 'Drop failed :(';
+
+                document.body.appendChild(p);
+            }
+        },
+        progress => {
             const p = document.createElement('pre');
-            p.innerText = 'Drop failed :(';
+            p.innerText = `Progress ${progress}`;
 
             document.body.appendChild(p);
         }
-    });
+    );
 });
 
 function makeDropPiece(): Allihoopa.DropPiece {

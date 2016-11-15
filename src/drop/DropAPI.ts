@@ -1,14 +1,19 @@
 import {CreatedPiece, PieceInput} from './DropInterfaces';
 
 import {graphQLQuery, ResultCallback} from '../graphql';
+import {clampUnit} from '../utils/math';
 
 export function uploadResource(
     data: Blob,
     completionCallback: ResultCallback<string>,
     progressCallback: ProgressCallback
 ) {
+    const GET_URL_PROGRESS = 0.1;
+    const UPLOAD_FILE_PROGRESS = 0.9;
+
     getUrls(1, (result) => {
         if (result.status === 'OK') {
+            progressCallback(GET_URL_PROGRESS);
             const url = result.data[0];
             uploadFile(
                 url,
@@ -21,7 +26,9 @@ export function uploadResource(
                         completionCallback(result);
                     }
                 },
-                (progress: number) => { progressCallback(progress); }
+                (progress: number) => progressCallback(
+                    clampUnit(GET_URL_PROGRESS + progress * UPLOAD_FILE_PROGRESS)
+                )
             );
         }
         else {
@@ -55,7 +62,12 @@ export function getUrls(count: number, callback: ResultCallback<string[]>) {
 export type CompletionCallback = (successful: boolean) => void;
 export type ProgressCallback = (progress: number) => void;
 
-export function uploadFile(url: string, data: Blob, completionCallback: ResultCallback<null>, progressCallback: ProgressCallback) {
+export function uploadFile(
+    url: string,
+    data: Blob,
+    completionCallback: ResultCallback<null>,
+    progressCallback: ProgressCallback
+) {
     if (!url) {
         throw new Error('No file url');
     }
@@ -75,7 +87,7 @@ export function uploadFile(url: string, data: Blob, completionCallback: ResultCa
 
     xhr.upload.onprogress = function(e) {
         if (e.lengthComputable) {
-            progressCallback(Math.round((e.loaded / e.total) * 100));
+            progressCallback(clampUnit(e.loaded / e.total));
         }
     };
 

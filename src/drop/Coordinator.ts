@@ -1,10 +1,18 @@
 import {Result} from '../graphql';
 
 import {rotateImageFromMetadata} from '../utils/image';
+import {clampUnit} from '../utils/math';
 
 import * as DropAPI from './DropAPI';
 import {CreatedPiece, PieceInput} from './DropInterfaces';
 import {DropPiece} from './PieceData';
+
+const FETCH_PROGRESS_PART = 0.3;
+const UPLOAD_PROGRESS_PART = 0.7;
+
+const ALL_UPLOADS_PROGRESS_PART = 0.7;
+const CREATE_PIECE_PROGRESS_PART = 0.2;
+const COMMIT_EDITOR_PROGRESS_PART = 0.1;
 
 export type AudioAssetType = 'ogg' | 'wav';
 export type ImageAssetType = 'png';
@@ -29,11 +37,13 @@ export interface CoordinatorOptions {
     readonly piece: DropPiece;
     readonly onDropCompleted?: DropCompletionCallback;
     readonly onInitialCoverImageDidArrive?: ((data: Blob) => void);
+    readonly onProgress?: DropAPI.ProgressCallback;
 }
 
 export class Coordinator {
     private piece: DropPiece;
     private onDropCompleted?: DropCompletionCallback;
+    private onProgress?: DropAPI.ProgressCallback;
     private onInitialCoverImageDidArrive?: ((data: Blob) => void);
 
     private isCanceled: boolean = false;
@@ -41,8 +51,11 @@ export class Coordinator {
     private committedEditorState?: EditInfoState;
 
     private mixStemState: AssetState<AudioAssetType> = { state: 'WAITING' };
+    private mixStemProgress: number = 0;
     private previewAudioState: AssetState<AudioAssetType> = { state: 'WAITING' };
+    private previewAudioProgress: number = 0;
     private coverImageState: AssetState<ImageAssetType> = { state: 'WAITING' };
+    private coverImageProgress: number = 0;
 
     private initialCoverImageState?: Result<Blob | null>;
     private isUploadingCoverImage: boolean = false;
@@ -52,6 +65,7 @@ export class Coordinator {
     constructor(options: CoordinatorOptions) {
         this.piece = options.piece;
         this.onDropCompleted = options.onDropCompleted;
+        this.onProgress = options.onProgress;
         this.onInitialCoverImageDidArrive = options.onInitialCoverImageDidArrive;
 
         this.fetchMixStem();
@@ -90,6 +104,9 @@ export class Coordinator {
         }
 
         if (audio) {
+            this.mixStemProgress = FETCH_PROGRESS_PART;
+            this.didUpdateProgress();
+
             DropAPI.uploadResource(
                 audio,
                 result => {
@@ -103,6 +120,9 @@ export class Coordinator {
                             url: result.data,
                             asset_type: mimeToAudioAssetType(audio.type),
                         };
+
+                        this.mixStemProgress = 1;
+                        this.didUpdateProgress();
                     }
                     else {
                         this.mixStemState = { state: 'ERROR', error: result.error, };
@@ -110,7 +130,10 @@ export class Coordinator {
 
                     this.didUpdateState();
                 },
-                progress => { });
+                progress => {
+                    this.mixStemProgress = clampUnit(FETCH_PROGRESS_PART + UPLOAD_PROGRESS_PART * progress);
+                    this.didUpdateProgress();
+                });
         }
         else if (error) {
             this.mixStemState = { state: 'ERROR', error: error };
@@ -140,6 +163,9 @@ export class Coordinator {
         }
 
         if (audio) {
+            this.previewAudioProgress = FETCH_PROGRESS_PART;
+            this.didUpdateProgress();
+
             DropAPI.uploadResource(
                 audio,
                 result => {
@@ -153,13 +179,19 @@ export class Coordinator {
                             url: result.data,
                             asset_type: mimeToAudioAssetType(audio.type),
                         };
+
+                        this.previewAudioProgress = 1;
+                        this.didUpdateProgress();
                     }
                     else {
                         this.previewAudioState = { state: 'ERROR', error: result.error };
                     }
                     this.didUpdateState();
                 },
-                progress => { });
+                progress => {
+                    this.previewAudioProgress = clampUnit(FETCH_PROGRESS_PART + UPLOAD_PROGRESS_PART * progress);
+                    this.didUpdateProgress();
+                });
         }
         else if (error) {
             this.previewAudioState = { state: 'ERROR', error: error };
@@ -220,6 +252,9 @@ export class Coordinator {
         if (data) {
             let assetType = mimeToImageAssetType(data.type);
 
+            this.coverImageProgress = FETCH_PROGRESS_PART;
+            this.didUpdateProgress();
+
             DropAPI.uploadResource(
                 data,
                 result => {
@@ -233,6 +268,9 @@ export class Coordinator {
                             url: result.data,
                             asset_type: assetType,
                         };
+
+                        this.coverImageProgress = 1;
+                        this.didUpdateProgress();
                     }
                     else {
                         this.coverImageState = { state: 'ERROR', error: result.error };
@@ -240,7 +278,10 @@ export class Coordinator {
 
                     this.didUpdateState();
                 },
-                progress => { });
+                progress => {
+                    this.coverImageProgress = clampUnit(FETCH_PROGRESS_PART * UPLOAD_PROGRESS_PART * progress);
+                    this.didUpdateProgress();
+                });
         }
         else {
             this.coverImageState = { state: 'NO_ASSET' };
@@ -290,6 +331,7 @@ export class Coordinator {
         DropAPI.dropPiece(pieceInput, result => {
             this.isUploading = false;
             this.createPieceResult = result;
+            this.didUpdateProgress();
             this.didUpdateState();
         });
     }
@@ -323,6 +365,39 @@ export class Coordinator {
                 );
             }
         }
+    }
+
+    private didUpdateProgress() {
+        if (!this.onProgress) {
+            return;
+        }
+
+        let progress = 0;
+
+        if (this.committedEditorState) {
+            progress += COMMIT_EDITOR_PROGRESS_PART;
+        }
+
+        if (this.createPieceResult) {
+            progress += CREATE_PIECE_PROGRESS_PART;
+        }
+
+        let uploads = 1;
+        let uploadProgress = this.mixStemProgress;
+
+        if (this.coverImageState.state !== 'NO_ASSET') {
+            uploads += 1;
+            uploadProgress += this.coverImageProgress;
+        }
+
+        if (this.previewAudioState.state !== 'NO_ASSET') {
+            uploads += 1;
+            uploadProgress += this.previewAudioProgress;
+        }
+
+        progress += (uploadProgress / uploads) * ALL_UPLOADS_PROGRESS_PART;
+
+        this.onProgress(clampUnit(progress));
     }
 };
 
