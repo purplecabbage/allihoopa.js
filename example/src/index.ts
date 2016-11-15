@@ -28,9 +28,9 @@ authButton.addEventListener('click', () => {
 });
 
 dropButton.addEventListener('click', () => {
-    AllihoopaUI.drop(makeDropPiece(), (success) => {
+    AllihoopaUI.drop(makeDropPiece(), piece => {
         const p = document.createElement('pre');
-        p.innerText = JSON.stringify(success ? 'Drop successful' : 'Drop cancelled');
+        p.innerText = JSON.stringify(piece ? 'Drop successful' : 'Drop cancelled');
 
         document.body.appendChild(p);
     });
