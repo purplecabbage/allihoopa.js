@@ -17,7 +17,7 @@ export function authenticate(callback: AuthCallback) {
         'width=420,height=600');
 
     if (!popup) {
-        console.warn('Could not open the popup window');
+        console.warn('[Allihoopa SDK] Could not open the popup window');
 
         if (callback) {
             callback(false);
@@ -39,7 +39,6 @@ export function authenticate(callback: AuthCallback) {
             callbackFired = true;
 
             if (callback) {
-                console.log('[Allihoopa SDK] authentication completed', value);
                 callback(value);
             }
         }

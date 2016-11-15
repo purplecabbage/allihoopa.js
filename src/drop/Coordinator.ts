@@ -114,6 +114,8 @@ export class Coordinator {
         }
         else {
             console.error('[Allihoopa SDK] Incorrect usage: neither a mix stem nor an error was produced');
+            this.mixStemState = { state: 'ERROR', error: new Error('Invalid SDK usage') };
+            this.didUpdateState();
         }
     }
 
