@@ -111,7 +111,7 @@ var piece = new Allihoopa.DropPiece({
     },
 });
 
-Allihoopa.drop(piece, function (successful) {
+AllihoopaUI.drop(piece, function (successful) {
     if (successful) {
         // The user successfully dropped the piece
     } else {
@@ -200,3 +200,27 @@ var piece = new Allihoopa.DropPiece({
     },
 });
 ```
+
+
+## Custom drop flow / usage without user interface
+
+If your application already provides a user interface for sharing music, where
+users can set titles and cover images, you can use our headless API to get a
+more streamlined integration into your app.
+
+Use the `Allihoopa.drop` method to do this:
+
+```javascript
+Allihoopa.drop(
+    piece,
+    function (createdPiece) {
+        // You can get a URL to the created piece from `createdPiece.url`
+    },
+    function (progress) {
+        // Progress ranges from 0 to 1 and is an approximate number of how
+        // much data is uploaded.
+    });
+```
+
+The provided `piece` argument is an instance of `Allihoopa.DropPiece`, described
+above.
