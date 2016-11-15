@@ -46,6 +46,8 @@ export interface TimeSignatureData {
     lower: number;
 }
 
+const ALLIHOOPA_SHORT_ID_REGEX = /^https:\/\/allihoopa.com\/s\/([^\/]+)$/;
+
 export class DropPiece {
     stems: StemsData;
     presentation: PresentationData;
@@ -132,6 +134,10 @@ export class DropPiece {
                 if (!(typeof (pieces[i] as any) === 'string')) {
                     errors.push('`basedOnPieces` field on `attribution` must be an array of strings');
                     break;
+                }
+
+                if (ALLIHOOPA_SHORT_ID_REGEX.test(pieces[i])) {
+                    pieces[i] = pieces[i].replace(ALLIHOOPA_SHORT_ID_REGEX, '$1');
                 }
             }
         }

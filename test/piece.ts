@@ -315,6 +315,17 @@ describe('DropPiece validation', () => {
             expect(p.attribution).toEqual(md.attribution);
         });
 
+        it('converts Allihoopa URLs to short ids', () => {
+            const md = minimalValidMetadata();
+            md.attribution = { basedOnPieces: [
+                'https://allihoopa.com/s/WwXiKvUZ',
+                'https://allihoopa.com/s/VbUpAmUG',
+            ] };
+
+            const p = new DropPiece(md);
+            expect(p.attribution).toEqual({ basedOnPieces: ['WwXiKvUZ', 'VbUpAmUG'] });
+        });
+
         it('accepts no attribution information', () => {
             const md = minimalValidMetadata();
             delete md.attribution;

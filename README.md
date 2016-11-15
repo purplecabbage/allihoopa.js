@@ -196,7 +196,8 @@ var piece = new Allihoopa.DropPiece({
     },
     attribution: {
         // If this piece is based on other pieces, provide a list of the IDs
-        // of those pieces here.
+        // of those pieces here. You can also provide URLs to pieces on
+        // Allihoopa, e.g. `https://allihoopa.com/s/VbUpAmUG`.
         basedOnPieces: [],
     },
 });
