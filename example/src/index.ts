@@ -6,8 +6,10 @@ declare const ALLIHOOPA_API_KEY: string;
 
 const authButton = document.querySelector('#js-open-auth');
 const dropButton = document.querySelector('#js-open-drop');
+const dropWithoutUIButton = document.querySelector('#js-drop-without-ui');
 console.assert(!!authButton);
 console.assert(!!dropButton);
+console.assert(!!dropWithoutUIButton);
 
 Allihoopa.setup({
     app: ALLIHOOPA_APP_IDENTIFIER,
@@ -24,7 +26,36 @@ authButton.addEventListener('click', () => {
 });
 
 dropButton.addEventListener('click', () => {
-    const piece = new Allihoopa.DropPiece({
+    AllihoopaUI.drop(makeDropPiece(), (success) => {
+        const p = document.createElement('pre');
+        p.innerText = JSON.stringify(success ? 'Drop successful' : 'Drop cancelled');
+
+        document.body.appendChild(p);
+    });
+});
+
+dropWithoutUIButton.addEventListener('click', () => {
+    Allihoopa.drop(makeDropPiece(), piece => {
+        if (piece) {
+            const a = document.createElement('a');
+            a.innerText = piece.title;
+            a.setAttribute('href', piece.url);
+            a.setAttribute('style', 'display: block');
+            a.setAttribute('target', '_blank');
+
+            document.body.appendChild(a);
+        }
+        else {
+            const p = document.createElement('pre');
+            p.innerText = 'Drop failed :(';
+
+            document.body.appendChild(p);
+        }
+    });
+});
+
+function makeDropPiece(): Allihoopa.DropPiece {
+    return new Allihoopa.DropPiece({
         stems: {
             mixStem: (completion: (data: Blob | null, error: Error | null) => void) => {
                 getFileAsBytes(window.location.origin + '/drop.wav', completion);
@@ -56,15 +87,7 @@ dropButton.addEventListener('click', () => {
             basedOnPieces: [],
         },
     });
-
-    AllihoopaUI.drop(piece, (success) => {
-        const p = document.createElement('pre');
-        p.innerText = JSON.stringify(success ? 'Drop successful' : 'Drop cancelled');
-
-        document.body.appendChild(p);
-    });
-});
-
+}
 
 function getFileAsBytes(url: string, callback: (file: Blob | null, error: Error | null) => void) {
     if (url.length > 0) {
