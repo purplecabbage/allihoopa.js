@@ -111,9 +111,10 @@ var piece = new Allihoopa.DropPiece({
     },
 });
 
-AllihoopaUI.drop(piece, function (successful) {
-    if (successful) {
-        // The user successfully dropped the piece
+AllihoopaUI.drop(piece, function (createdPiece, error) {
+    if (createdPiece) {
+        // The user successfully dropped the piece. You can get the URL through
+        // `createdPiece.url`.
     } else {
         // The user closed the dialog without dropping, either by an error
         // or by not going through the steps.
@@ -213,7 +214,7 @@ Use the `Allihoopa.drop` method to do this:
 ```javascript
 Allihoopa.drop(
     piece,
-    function (createdPiece) {
+    function (createdPiece, error) {
         // You can get a URL to the created piece from `createdPiece.url`
     },
     function (progress) {
