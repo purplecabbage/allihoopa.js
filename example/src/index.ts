@@ -7,9 +7,11 @@ declare const ALLIHOOPA_API_KEY: string;
 const authButton = document.querySelector('#js-open-auth');
 const dropButton = document.querySelector('#js-open-drop');
 const dropWithoutUIButton = document.querySelector('#js-drop-without-ui');
+const coverImageInput = document.querySelector('#js-cover-image-input') as HTMLInputElement;
 console.assert(!!authButton);
 console.assert(!!dropButton);
 console.assert(!!dropWithoutUIButton);
+console.assert(!!coverImageInput);
 
 Allihoopa.setup({
     app: ALLIHOOPA_APP_IDENTIFIER,
@@ -63,8 +65,10 @@ function makeDropPiece(): Allihoopa.DropPiece {
         },
         presentation: {
             title: 'A test piece',
-            coverImage: () => {
-
+            coverImage: (completion: (data: Blob | null) => void) => {
+                if (coverImageInput.files) {
+                    completion(coverImageInput.files[0]);
+                }
             },
         },
         musicalMetadata: {

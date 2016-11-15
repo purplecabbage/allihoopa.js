@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import {authenticate} from '../auth';
 import {DropPiece} from '../drop/PieceData';
 
-import {Controller} from './components/Coordinator';
+import {Controller} from './components/Controller';
 import {Overlay} from './components/Overlay';
 
 export type DropCallback = (successful: boolean) => void;

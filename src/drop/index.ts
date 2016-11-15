@@ -9,7 +9,6 @@ export function drop(piece: DropPiece, callback: DropCompletionCallback) {
             const coordinator = new Coordinator({
                 piece: piece,
                 onDropCompleted: callback,
-                onInitialCoverImageDidArrive: null,
             });
             coordinator.commitEditorDefaults();
         }

@@ -1,5 +1,7 @@
 import {Result} from '../graphql';
 
+import {rotateImageFromMetadata} from '../utils/image';
+
 import * as DropAPI from './DropAPI';
 import {CreatedPiece, PieceInput} from './DropInterfaces';
 import {DropPiece} from './PieceData';
@@ -25,29 +27,32 @@ export type DropCompletionCallback = (piece: CreatedPiece | null, error: Error |
 
 export interface CoordinatorOptions {
     readonly piece: DropPiece;
-    readonly onDropCompleted: DropCompletionCallback | null;
-    readonly onInitialCoverImageDidArrive: ((data: Blob) => void) | null;
+    readonly onDropCompleted?: DropCompletionCallback;
+    readonly onInitialCoverImageDidArrive?: ((data: Blob) => void);
 }
 
 export class Coordinator {
     private piece: DropPiece;
-    private onDropCompleted: DropCompletionCallback | null;
+    private onDropCompleted?: DropCompletionCallback;
+    private onInitialCoverImageDidArrive?: ((data: Blob) => void);
 
     private isCanceled: boolean = false;
     private isUploading: boolean = false;
-    private committedEditorState: EditInfoState | null = null;
+    private committedEditorState?: EditInfoState;
 
     private mixStemState: AssetState<AudioAssetType> = { state: 'WAITING' };
     private previewAudioState: AssetState<AudioAssetType> = { state: 'WAITING' };
     private coverImageState: AssetState<ImageAssetType> = { state: 'WAITING' };
 
-    private initialCoverImageState: Result<Blob | null> | null = null;
+    private initialCoverImageState?: Result<Blob | null>;
+    private isUploadingCoverImage: boolean = false;
 
-    private createPieceResult: Result<CreatedPiece> | null = null;
+    private createPieceResult?: Result<CreatedPiece>;
 
     constructor(options: CoordinatorOptions) {
         this.piece = options.piece;
         this.onDropCompleted = options.onDropCompleted;
+        this.onInitialCoverImageDidArrive = options.onInitialCoverImageDidArrive;
 
         this.fetchMixStem();
         this.fetchPreviewAudio();
@@ -56,7 +61,6 @@ export class Coordinator {
 
     commitEditor(state: EditInfoState) {
         this.committedEditorState = state;
-        this.uploadCoverImage(state.coverImageBinary);
         this.didUpdateState();
     }
 
@@ -173,8 +177,16 @@ export class Coordinator {
             this.didUpdateState();
         }
         else {
-            this.piece.presentation.coverImage(
-                (data, error) => this.initialCoverImageDidArrive(data, error));
+            this.piece.presentation.coverImage((data, error) => {
+                if (data) {
+                    rotateImageFromMetadata(data, image => {
+                        this.initialCoverImageDidArrive(image, error);
+                    });
+                }
+                else {
+                    this.initialCoverImageDidArrive(data, error);
+                }
+            });
         }
     }
 
@@ -188,13 +200,26 @@ export class Coordinator {
         }
         else {
             this.initialCoverImageState = { status: 'OK', data: image };
+
+            if (image && this.onInitialCoverImageDidArrive) {
+                this.onInitialCoverImageDidArrive(image);
+            }
         }
 
         this.didUpdateState();
     }
 
-    private uploadCoverImage(data: Blob | null) {
+    private uploadCoverImage() {
+        let data = (this.initialCoverImageState && this.initialCoverImageState.status === 'OK')
+            ? this.initialCoverImageState.data : null;
+
+        if (this.committedEditorState && this.committedEditorState.coverImageBinary) {
+            data = this.committedEditorState.coverImageBinary;
+        }
+
         if (data) {
+            let assetType = mimeToImageAssetType(data.type);
+
             DropAPI.uploadResource(
                 data,
                 result => {
@@ -206,7 +231,7 @@ export class Coordinator {
                         this.coverImageState = {
                             state: 'DONE',
                             url: result.data,
-                            asset_type: mimeToImageAssetType(data.type),
+                            asset_type: assetType,
                         };
                     }
                     else {
@@ -272,6 +297,11 @@ export class Coordinator {
     private didUpdateState() {
         if (this.isCanceled) {
             return;
+        }
+
+        if (this.committedEditorState && this.initialCoverImageState && !this.isUploadingCoverImage) {
+            this.isUploadingCoverImage = true;
+            this.uploadCoverImage();
         }
 
         const allUploadsComplete = (
