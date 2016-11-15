@@ -38,7 +38,7 @@ export class CoverImageEditor extends React.Component<CoverImageEditorProps, voi
 
                 <input
                     type='file'
-                    accept='image/png,image/jpg'
+                    accept='image/*'
                     ref={input => { this.imageInput = input; }}
                     style={{display: 'none'}}
                     value=''
