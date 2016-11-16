@@ -53,6 +53,8 @@ environment.
 ## Setting up the SDK
 
 ```javascript
+var Allihoopa = require('allihoopa'); // If you're using NPM
+
 Allihoopa.setup({
     app: '<application identifier>',
     apiKey: '<API  key>',
@@ -110,6 +112,10 @@ var piece = new Allihoopa.DropPiece({
         },
     },
 });
+
+// Include the UI parts of the SDK if you're using NPM. This also requires
+// the package's optionalDependencies to be installed.
+var AllihoopaUI = require('allihoopa/ui');
 
 AllihoopaUI.drop(piece, function (createdPiece, error) {
     if (createdPiece) {
@@ -210,7 +216,15 @@ If your application already provides a user interface for sharing music, where
 users can set titles and cover images, you can use our headless API to get a
 more streamlined integration into your app.
 
-Use the `Allihoopa.drop` method to do this:
+If you're not using NPM to include our SDK, you can refer to the headless
+variant on our CDN for a smaller download:
+
+```html
+<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-0.3.0.min.js"></script>
+```
+
+To drop, use the `Allihoopa.drop` method. It works similar to `AllihoopaUI.drop`
+but also provides an optional progress callback:
 
 ```javascript
 Allihoopa.drop(
