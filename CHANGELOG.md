@@ -1,7 +1,7 @@
 Change log
 ==========
 
-## 0.4.0 — Unreleased
+## [0.4.0] — 2016-11-17
 
 ## Breaking changes
 
@@ -47,3 +47,4 @@ Empty release
 
 [0.2.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.1.0...v0.2.0
 [0.3.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.2.0...v0.3.0
+[0.4.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.3.0...v0.4.0
