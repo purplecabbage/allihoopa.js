@@ -71,27 +71,47 @@ export function uploadFile(
     if (!url) {
         throw new Error('No file url');
     }
-    let xhr = new XMLHttpRequest();
-    xhr.open('PUT', url);
-    xhr.setRequestHeader('Content-type', ' ');
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            completionCallback({ status: 'OK', data: null });
-        } else if (xhr.readyState === 4) {
+    // If we send the Blob itself with XMLHttpRequest, the `Content-Type`
+    // header will be set to the containing MIME type. However, we can't
+    // sign our upload URLs for arbitrary content type, so we convert the
+    // Blob here first to a raw ArrayBuffer, stripping the content type
+    // in the process.
+    //
+    // This fixes an issue with Safari 9 where `setRequestHeader` throws
+    // an exception for empty content types.
+    const reader = new FileReader();
+    reader.addEventListener('loadend', () => {
+        if (reader.result instanceof ArrayBuffer) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', url);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    completionCallback({ status: 'OK', data: null });
+                } else if (xhr.readyState === 4) {
+                    completionCallback({
+                        status: 'ERROR',
+                        error: new Error('Could not upload file. Status = ' + xhr.status + ' ' + xhr.responseText) });
+                }
+            };
+
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    progressCallback(clampUnit(e.loaded / e.total));
+                }
+            };
+
+            xhr.send(reader.result);
+        } else {
             completionCallback({
                 status: 'ERROR',
-                error: new Error('Could not upload file. Status = ' + xhr.status + ' ' + xhr.responseText) });
+                error: new Error('Could not convert file data to raw array buffer'),
+            });
         }
-    };
+    });
 
-    xhr.upload.onprogress = function(e) {
-        if (e.lengthComputable) {
-            progressCallback(clampUnit(e.loaded / e.total));
-        }
-    };
-
-    xhr.send(data);
+    reader.readAsArrayBuffer(data);
 }
 
 interface DropPieceResult {
