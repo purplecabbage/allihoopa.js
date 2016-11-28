@@ -25,14 +25,14 @@ library from our CDN. React 15.0.0 or later is required.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
 
-<script src="https://ahcdn.se/sdk-dist/allihoopa-0.4.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-0.4.1.min.js"></script>
 ```
 
 We also build a standalone version that wraps all dependencies required by our
 SDK:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-0.4.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-0.4.1.min.js"></script>
 ```
 
 
@@ -220,7 +220,7 @@ If you're not using NPM to include our SDK, you can refer to the headless
 variant on our CDN for a smaller download:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-0.4.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-0.4.1.min.js"></script>
 ```
 
 To drop, use the `Allihoopa.drop` method. It works similar to `AllihoopaUI.drop`
