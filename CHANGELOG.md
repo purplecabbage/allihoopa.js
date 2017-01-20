@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## [0.4.2] — 2017-01-20
+
+### Bugfixes
+
+* Updated accepted mime types for audio files.
+
 ## [0.4.1] — 2016-11-28
 
 ### Bugfixes
@@ -55,3 +61,4 @@ Empty release
 [0.3.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.2.0...v0.3.0
 [0.4.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.3.0...v0.4.0
 [0.4.1]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.0...v0.4.1
+[0.4.2]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.1...v0.4.2
