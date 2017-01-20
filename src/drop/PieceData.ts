@@ -60,7 +60,7 @@ export class DropPiece {
         this.attribution = data.attribution;
         this.musicalMetadata = data.musicalMetadata;
 
-        const errors = [];
+        const errors: any[] = [];
         this.validate(errors);
 
         if (errors.length) {

@@ -39,9 +39,12 @@ function renderDrop(piece: DropPiece, callback: DropCompletionCallback) {
     let error: Error | null = null;
 
     const onClose = () => {
-        ReactDOM.unmountComponentAtNode(container);
-        container.parentNode.removeChild(container);
-
+        if (container) {
+            ReactDOM.unmountComponentAtNode(container);
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
+        }
         if (callback) {
             callback(createdPiece, error);
         }
