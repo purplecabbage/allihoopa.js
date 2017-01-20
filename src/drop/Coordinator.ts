@@ -402,10 +402,10 @@ export class Coordinator {
 };
 
 function mimeToAudioAssetType(mime: string): AudioAssetType {
-    if (mime === 'audio/x-wav') {
+    if (mime === 'audio/x-wav' || mime === 'audio/wav') {
         return 'wav';
     }
-    else if (mime === 'audio/x-ogg') {
+    else if (mime === 'audio/x-ogg' || mime === 'audio/ogg') {
         return 'ogg';
     }
 
