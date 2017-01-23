@@ -57,7 +57,9 @@ in parallel:
 * Webpack dev server in the example root. Start with `npm run dev-server` in
   *this* folder.
 
-Additionally, you will need to open a browser on http://localhost:8080 to
+This exposes the example web interface on http://localhost:8080.
+
+Additionally, you will need to open a browser on http://localhost:9876 to
 actually run the tests.
 
 To simplify with running and watching the logs, there's a `start-tmux.sh` script
