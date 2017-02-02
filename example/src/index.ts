@@ -98,6 +98,11 @@ function makeDropPiece(): Allihoopa.DropPiece {
                     lower: 4,
                 },
             },
+            tonality: {
+                mode: 'TONAL',
+                scale: Allihoopa.getMajorScale(2),
+                root: 2,
+            },
         },
         attribution: {
             basedOnPieces: attribution.value.trim() ? attribution.value.trim().split('\n') : [],

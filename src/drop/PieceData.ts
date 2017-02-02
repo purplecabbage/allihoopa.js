@@ -26,6 +26,7 @@ export interface MusicalMetadata {
     tempo?: FixedTempoData;
     loop?: LoopMarkerData;
     timeSignature?: FixedTimeSignatureData;
+    tonality?: Tonality;
 }
 
 export interface FixedTempoData {
@@ -45,6 +46,11 @@ export interface TimeSignatureData {
     upper: number;
     lower: number;
 }
+
+export type Tonality =
+    { mode: 'UNKNOWN' } |
+    { mode: 'ATONAL' } |
+    { mode: 'TONAL', scale: boolean[], root: number };
 
 const ALLIHOOPA_SHORT_ID_REGEX = /^https:\/\/allihoopa.com\/s\/([^\/]+)$/;
 
@@ -197,6 +203,38 @@ export class DropPiece {
                 if ([2, 4, 8, 16].indexOf(ts.fixed.lower) === -1) {
                     errors.push('Field `lower` of `fixed` of `timeSignature` on `musicalMetadata` must be either 2, 4, 8, or 16');
                 }
+            }
+        }
+
+        if (this.musicalMetadata.tonality) {
+            const t = this.musicalMetadata.tonality;
+
+            if (!t.mode) {
+                errors.push('Field `mode` of `tonality` on `musicalMetadata` must be set');
+            }
+            else if (t.mode === 'TONAL') {
+                if (!Array.isArray(t.scale)) {
+                    errors.push('Field `scale` of `tonality` on `musicalMetadata` must be an array');
+                }
+                else if (t.scale.filter(b => typeof b === 'boolean').length !== 12) {
+                    errors.push('Field `scale` of `tonality` on `musicalMetadata` must contain exactly 12 booleans');
+                }
+                else if (!t.scale.reduce((acc, b) => acc || b, false)) {
+                    errors.push('Field `scale` of `tonality` on `musicalMetadata` must contain at least one true value');
+                }
+
+                if (typeof t.root !== 'number' || Math.floor(t.root) !== t.root) {
+                    errors.push('Field `root` of `tonality` on `musicalMetadata` must be an integer');
+                }
+                else if (t.root < 0 || t.root >= 12) {
+                    errors.push('Field `root` of `tonality` on `musicalMetadata` must be between 0 and 11, inclusive');
+                }
+                else if (!t.scale[t.root]) {
+                    errors.push('`root`:th index of `scale` of `tonality` on `musicalMetadata` must be set');
+                }
+            }
+            else if (t.mode !== 'ATONAL' && t.mode !== 'UNKNOWN') {
+                errors.push('Field `mode` of `tonality` on `musicalMetadata` must be one of "unknown", "atonal", or "tonal"');
             }
         }
     }

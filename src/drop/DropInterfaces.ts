@@ -42,6 +42,7 @@ export interface MusicalMetadataInput {
     tempo?: FixedTempoInput;
     loop?: LoopInput;
     timeSignature?: FixedTimeSignatureInput;
+    tonality?: TonalityInput;
 }
 
 export interface FixedTempoInput {
@@ -60,4 +61,14 @@ export interface FixedTimeSignatureInput {
 export interface TimeSignatureInput {
     upper: number;
     lower: number;
+}
+
+export interface TonalityInput {
+    mode: 'UNKNOWN' | 'ATONAL' | 'TONAL';
+    data?: TonalityDataInput;
+}
+
+export interface TonalityDataInput {
+    scale: boolean[];
+    root: number;
 }

@@ -304,6 +304,11 @@ export class Coordinator {
         const pieceInfo = this.committedEditorState;
 
         const loopMarkers = this.piece.musicalMetadata.loop;
+        const tonality = this.piece.musicalMetadata.tonality;
+
+        const tonalityData = tonality && tonality.mode === 'TONAL'
+            ? { scale: tonality.scale, root: tonality.root }
+            : undefined;
 
         const pieceInput: PieceInput = {
             attribution: this.piece.attribution,
@@ -315,6 +320,10 @@ export class Coordinator {
                 },
                 tempo: this.piece.musicalMetadata.tempo,
                 timeSignature: this.piece.musicalMetadata.timeSignature,
+                tonality: tonality ? {
+                    mode: tonality.mode,
+                    data: tonalityData,
+                } : undefined,
             },
             presentation: {
                 coverImage: coverImage && { [coverImage.asset_type]: coverImage.url },

@@ -1,4 +1,5 @@
 import {DropPiece, DropPieceData} from '../src/drop/PieceData';
+import {getMajorScale} from '../src/piece/tonality';
 
 describe('DropPiece validation', () => {
     it('validates the minimal metadata', () => {
@@ -350,6 +351,153 @@ describe('DropPiece validation', () => {
             const md = minimalValidMetadata() as any;
             md.attribution = { };
             expect(() => new DropPiece(md)).toThrowError(/basedOnPieces/);
+        });
+    });
+
+    describe('tonality', () => {
+        it('accepts unknown tonality', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = { mode: 'UNKNOWN' };
+
+            const p = new DropPiece(md);
+            expect(p.musicalMetadata.tonality).toEqual(md.musicalMetadata.tonality);
+        });
+
+        it('accepts atonal tonality', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = { mode: 'ATONAL' };
+
+            const p = new DropPiece(md);
+            expect(p.musicalMetadata.tonality).toEqual(md.musicalMetadata.tonality);
+        });
+
+        it('accepts tonal tonality, root C', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = { mode: 'TONAL', scale: getMajorScale(0), root: 0 };
+
+            const p = new DropPiece(md);
+            expect(p.musicalMetadata.tonality).toEqual(md.musicalMetadata.tonality);
+        });
+
+        it('accepts tonal tonality, root B', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = { mode: 'TONAL', scale: getMajorScale(0), root: 11 };
+
+            const p = new DropPiece(md);
+            expect(p.musicalMetadata.tonality).toEqual(md.musicalMetadata.tonality);
+        });
+
+        it('rejects tonal tonality without scale values set', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: [false, false, false, false, false, false, false, false, false, false, false, false],
+                root: 0,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with too small scale', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: [false, false, false, false, false, false, false, false, false, false, false],
+                root: 0,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with too large scale', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: [false, false, false, false, false, false, false, false, false, false, false, false, false],
+                root: 0,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with non-boolean scale', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: ['banana', 'cucumber', true, false, false, false, false, false, false, false, false, false, false] as any,
+                root: 0,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with too low root', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: getMajorScale(0),
+                root: -1,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with too high root', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: [false, false, false, false, false, false, false, false, false, false, false, false],
+                root: 12,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with root not part of scale', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: getMajorScale(0),
+                root: 1,
+            };
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with no scale or root', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+            } as any;
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonal tonality with invalid scale and root', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'TONAL',
+                scale: 'banana',
+                root: 1.3,
+            } as any;
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonality with invalid mode', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = {
+                mode: 'crazy_bananas',
+            } as any;
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
+        });
+
+        it('rejects tonality field with invalid type', () => {
+            const md = minimalValidMetadata();
+            md.musicalMetadata.tonality = 'banana' as any;
+
+            expect(() => new DropPiece(md)).toThrowError(/tonality/);
         });
     });
 
