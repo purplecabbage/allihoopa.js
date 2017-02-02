@@ -13,6 +13,10 @@ console.assert(!!dropButton);
 console.assert(!!dropWithoutUIButton);
 console.assert(!!coverImageInput);
 
+if (!authButton) { throw new Error('Auth button must exist'); }
+if (!dropButton) { throw new Error('Drop button must exist'); }
+if (!dropWithoutUIButton) { throw new Error('Drop without UI button'); }
+
 Allihoopa.setup({
     app: ALLIHOOPA_APP_IDENTIFIER,
     apiKey: ALLIHOOPA_API_KEY,
@@ -61,7 +65,7 @@ dropWithoutUIButton.addEventListener('click', () => {
             p.innerText = `Progress ${progress}`;
 
             document.body.appendChild(p);
-        }
+        },
     );
 });
 

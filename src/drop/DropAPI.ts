@@ -11,7 +11,7 @@ export function uploadResource(
     type: SongAssetType,
     format: SongAssetFormat,
     completionCallback: ResultCallback<string>,
-    progressCallback: ProgressCallback
+    progressCallback: ProgressCallback,
 ) {
     const GET_URL_PROGRESS = 0.1;
     const UPLOAD_FILE_PROGRESS = 0.9;
@@ -32,8 +32,8 @@ export function uploadResource(
                     }
                 },
                 (progress: number) => progressCallback(
-                    clampUnit(GET_URL_PROGRESS + progress * UPLOAD_FILE_PROGRESS)
-                )
+                    clampUnit(GET_URL_PROGRESS + progress * UPLOAD_FILE_PROGRESS),
+                ),
             );
         }
         else {
@@ -60,7 +60,7 @@ export function getUrl(type: SongAssetType, format: SongAssetFormat, callback: R
             else {
                 callback(result);
             }
-        }
+        },
     );
 }
 
@@ -71,7 +71,7 @@ export function uploadFile(
     url: string,
     data: Blob,
     completionCallback: ResultCallback<null>,
-    progressCallback: ProgressCallback
+    progressCallback: ProgressCallback,
 ) {
     if (!url) {
         throw new Error('No file url');

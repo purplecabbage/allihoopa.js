@@ -7,7 +7,7 @@ import {DropPiece} from './PieceData';
 export function drop(
     piece: DropPiece,
     onDropCompleted: DropCompletionCallback,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
 ) {
     authenticate(successful => {
         if (successful) {

@@ -1,79 +1,99 @@
 var webpack = require('webpack');
 var path = require('path');
-var yargs = require('yargs');
 var failPlugin = require('webpack-fail-plugin');
 
-var plugins = [
-    failPlugin,
-];
-var externals = {};
+module.exports = function(env) {
+    if (!env) {
+        env = {};
+    }
 
-var entryPoints = [
-    './src/index-bundle.js',
-    './src/ui-bundle.js',
-];
+    var plugins = [
+        failPlugin,
+    ];
+    var externals = {};
 
-var outputBasename = 'allihoopa-standalone';
-if (yargs.argv.externalReact) {
-    outputBasename = 'allihoopa';
-    externals = {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-    };
-} else if (yargs.argv.headless) {
-    outputBasename = 'allihoopa-headless';
-
-    entryPoints = [
+    var entryPoints = [
         './src/index-bundle.js',
-    ]
-}
+        './src/ui-bundle.js',
+    ];
 
-if (yargs.argv.versionTag) {
-    outputBasename += `-${yargs.argv.versionTag}`;
-}
+    var outputBasename = 'allihoopa-standalone';
+    if (env.externalReact) {
+        outputBasename = 'allihoopa';
+        externals = {
+            'react': 'React',
+            'react-dom': 'ReactDOM',
+        };
+    } else if (env.headless) {
+        outputBasename = 'allihoopa-headless';
 
-var outputFilename = `${outputBasename}.js`;
-if (yargs.argv.production) {
-    outputFilename = `${outputBasename}.min.js`;
-    plugins.push(new webpack.DefinePlugin({
-        'process.env': {
-            'NODE_ENV': JSON.stringify('production'),
-        },
+        entryPoints = [
+            './src/index-bundle.js',
+        ]
+    }
+
+    if (env.versionTag) {
+        outputBasename += `-${env.versionTag}`;
+    }
+
+    var outputFilename = `${outputBasename}.js`;
+    if (env.production) {
+        outputFilename = `${outputBasename}.min.js`;
+        plugins.push(new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production'),
+            },
+        }));
+        plugins.push(new webpack.optimize.UglifyJsPlugin({
+            minimize: true,
+            compress: {
+                warnings: false,
+                dead_code: true,
+            },
+        }));
+    }
+
+    plugins.push(new webpack.LoaderOptionsPlugin({
+        options: {
+            tslint: {
+                emitErrors: true,
+                failOnHint: true,
+            },
+        }
     }));
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-        minimize: true,
-        compress: {
-            warnings: false,
-            dead_code: true,
-        },
-    }));
-}
 
-module.exports = {
-    entry: entryPoints,
-    output: {
-        path: path.join(__dirname, '/dist'),
-        filename: outputFilename,
-        library: 'allihoopa',
-        libraryTarget: 'umd',
-        umdNamedDefine: true,
-    },
-    module: {
-        preLoaders: [
-            { test: /\.tsx?$/, loader: 'tslint', exclude: /node_modules/, },
-        ],
-        loaders: [
-            { test: /\.tsx?$/, loader: 'ts', exclude: /node_modules/, },
-        ],
-    },
-    resolve: {
-        root: path.resolve('./src'),
-        extensions: [ '', '.js', '.ts', '.tsx'],
-    },
-    plugins: plugins,
-    tslint: {
-        emitErrors: true,
-        failOnHint: true,
-    },
-    externals: externals,
+    return {
+        entry: entryPoints,
+        output: {
+            path: path.join(__dirname, '/dist'),
+            filename: outputFilename,
+            library: 'allihoopa',
+            libraryTarget: 'umd',
+            umdNamedDefine: true,
+        },
+        module: {
+            rules: [
+                {
+                    enforce: 'pre',
+                    test: /\.tsx?$/,
+                    loader: 'tslint-loader',
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.tsx?$/,
+                    loader: 'ts-loader',
+                    exclude: /node_modules/,
+                },
+            ],
+        },
+        resolve: {
+            modules: [
+                path.resolve('./src'),
+                path.resolve('./node_modules'),
+            ],
+            extensions: [ '.js', '.ts', '.tsx'],
+        },
+        plugins: plugins,
+        externals: externals,
+    };
 };

@@ -10,7 +10,7 @@ export type ResultCallback<T> = (result: Result<T>) => void;
 export function graphQLQuery<T>(
     query: string,
     variables: {[key: string]: any},
-    callback: ResultCallback<T>
+    callback: ResultCallback<T>,
 ) {
     const url = `https://${getAPIDomain()}/v1/graphql`;
 

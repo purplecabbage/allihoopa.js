@@ -19,7 +19,7 @@ if [ -n "${TRAVIS_TAG+set}" ]; then
         echo "Tagging release for ${TRAVIS_TAG}"
         echo
         echo "Naming release ${TRAVIS_TAG/v/}"
-        WEBPACK_EXTRA=--versionTag=${TRAVIS_TAG/v/}
+        WEBPACK_EXTRA=--env.versionTag=${TRAVIS_TAG/v/}
     fi
 fi
 
@@ -31,8 +31,8 @@ WEBPACK=./node_modules/.bin/webpack
 ./node_modules/.bin/tsc --declaration
 
 $WEBPACK $WEBPACK_EXTRA
-$WEBPACK --production $WEBPACK_EXTRA
-$WEBPACK --externalReact $WEBPACK_EXTRA
-$WEBPACK --externalReact --production $WEBPACK_EXTRA
-$WEBPACK --headless $WEBPACK_EXTRA
-$WEBPACK --headless --production $WEBPACK_EXTRA
+$WEBPACK --env.production $WEBPACK_EXTRA
+$WEBPACK --env.externalReact $WEBPACK_EXTRA
+$WEBPACK --env.externalReact --env.production $WEBPACK_EXTRA
+$WEBPACK --env.headless $WEBPACK_EXTRA
+$WEBPACK --env.headless --env.production $WEBPACK_EXTRA

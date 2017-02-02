@@ -18,25 +18,40 @@ module.exports = {
         publicPath: '/build/',
     },
     module: {
-        preLoaders: [
-            { test: /\.tsx?$/, loader: 'tslint', exclude: /node_modules/, },
-        ],
-        loaders: [
-            { test: /\.tsx?$/, loader: 'ts', exclude: /node_modules/, },
+        rules: [
+            {
+                enforce: 'pre',
+                test: /\.tsx?$/,
+                loader: 'tslint-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+            },
         ],
     },
     resolve: {
-        root: path.resolve('./src'),
-        extensions: [ '', '.js', '.ts'],
-    },
-    tslint: {
-        emitErrors: true,
-        failOnHint: true,
+        modules: [
+            path.resolve('./src'),
+            path.resolve('./node_modules'),
+            path.resolve('../node_modules'),
+        ],
+        extensions: [ '.js', '.ts'],
     },
     plugins: [
         new webpack.DefinePlugin({
             ALLIHOOPA_APP_IDENTIFIER: JSON.stringify(APP_IDENTIFIER),
             ALLIHOOPA_API_KEY: JSON.stringify(API_KEY),
+        }),
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                tslint: {
+                    emitErrors: true,
+                    failOnHint: true,
+                },
+            },
         }),
     ],
 };

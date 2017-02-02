@@ -63,6 +63,6 @@ function renderDrop(piece: DropPiece, callback: DropCompletionCallback) {
                 onDropComplete={onComplete}
             />
         </Overlay>,
-        container
+        container,
     );
 }
