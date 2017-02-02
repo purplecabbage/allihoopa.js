@@ -4,7 +4,7 @@ import {rotateImageFromMetadata} from '../utils/image';
 import {clampUnit} from '../utils/math';
 
 import * as DropAPI from './DropAPI';
-import {CreatedPiece, PieceInput} from './DropInterfaces';
+import {AudioAssetFormat, CreatedPiece, ImageAssetFormat, PieceInput} from './DropInterfaces';
 import {DropPiece} from './PieceData';
 
 const FETCH_PROGRESS_PART = 0.3;
@@ -13,9 +13,6 @@ const UPLOAD_PROGRESS_PART = 0.7;
 const ALL_UPLOADS_PROGRESS_PART = 0.7;
 const CREATE_PIECE_PROGRESS_PART = 0.2;
 const COMMIT_EDITOR_PROGRESS_PART = 0.1;
-
-export type AudioAssetType = 'ogg' | 'wav';
-export type ImageAssetType = 'png';
 
 export type AssetState<T>
     = { state: 'NO_ASSET' }
@@ -50,11 +47,11 @@ export class Coordinator {
     private isUploading: boolean = false;
     private committedEditorState?: EditInfoState;
 
-    private mixStemState: AssetState<AudioAssetType> = { state: 'WAITING' };
+    private mixStemState: AssetState<AudioAssetFormat> = { state: 'WAITING' };
     private mixStemProgress: number = 0;
-    private previewAudioState: AssetState<AudioAssetType> = { state: 'WAITING' };
+    private previewAudioState: AssetState<AudioAssetFormat> = { state: 'WAITING' };
     private previewAudioProgress: number = 0;
-    private coverImageState: AssetState<ImageAssetType> = { state: 'WAITING' };
+    private coverImageState: AssetState<ImageAssetFormat> = { state: 'WAITING' };
     private coverImageProgress: number = 0;
 
     private initialCoverImageState?: Result<Blob | null>;
@@ -109,6 +106,8 @@ export class Coordinator {
 
             DropAPI.uploadResource(
                 audio,
+                'mix_stem',
+                mimeToAudioAssetType(audio.type),
                 result => {
                     if (this.isCanceled) {
                         return;
@@ -168,6 +167,8 @@ export class Coordinator {
 
             DropAPI.uploadResource(
                 audio,
+                'preview_audio',
+                mimeToAudioAssetType(audio.type),
                 result => {
                     if (this.isCanceled) {
                         return;
@@ -257,6 +258,8 @@ export class Coordinator {
 
             DropAPI.uploadResource(
                 data,
+                'cover_image',
+                assetType,
                 result => {
                     if (this.isCanceled) {
                         return;
@@ -410,7 +413,7 @@ export class Coordinator {
     }
 };
 
-function mimeToAudioAssetType(mime: string): AudioAssetType {
+function mimeToAudioAssetType(mime: string): AudioAssetFormat {
     if (mime === 'audio/x-wav' || mime === 'audio/wav') {
         return 'wav';
     }
@@ -421,7 +424,7 @@ function mimeToAudioAssetType(mime: string): AudioAssetType {
     throw new Error(`Unknown audio MIME type: ${mime}, we only support Ogg/Vorbis and WAVE`);
 }
 
-function mimeToImageAssetType(mime: string): ImageAssetType {
+function mimeToImageAssetType(mime: string): ImageAssetFormat {
     if (mime === 'image/png') {
         return 'png';
     }

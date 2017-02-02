@@ -1,4 +1,7 @@
 // API data
+export type AudioAssetFormat = 'ogg' | 'wav';
+export type ImageAssetFormat = 'png';
+
 export interface CreatedPiece {
     url: string;
     title: string;

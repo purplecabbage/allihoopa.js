@@ -1,20 +1,25 @@
-import {CreatedPiece, PieceInput} from './DropInterfaces';
+import {AudioAssetFormat, CreatedPiece, ImageAssetFormat, PieceInput} from './DropInterfaces';
 
 import {graphQLQuery, ResultCallback} from '../graphql';
 import {clampUnit} from '../utils/math';
 
+export type SongAssetFormat = AudioAssetFormat | ImageAssetFormat;
+export type SongAssetType = 'cover_image' | 'preview_audio' | 'mix_stem';
+
 export function uploadResource(
     data: Blob,
+    type: SongAssetType,
+    format: SongAssetFormat,
     completionCallback: ResultCallback<string>,
     progressCallback: ProgressCallback
 ) {
     const GET_URL_PROGRESS = 0.1;
     const UPLOAD_FILE_PROGRESS = 0.9;
 
-    getUrls(1, (result) => {
+    getUrl(type, format, (result) => {
         if (result.status === 'OK') {
             progressCallback(GET_URL_PROGRESS);
-            const url = result.data[0];
+            const url = result.data;
             uploadFile(
                 url,
                 data,
@@ -37,20 +42,20 @@ export function uploadResource(
     });
 }
 
-export function getUrls(count: number, callback: ResultCallback<string[]>) {
+export function getUrl(type: SongAssetType, format: SongAssetFormat, callback: ResultCallback<string>) {
     const query = `
-        mutation ($count: Int!) {
-            uploadUrls(count: $count) {
-                urls
+        mutation ($format: SongAssetFormat!, $type: SongAssetType!) {
+            uploadUrlForFormat(assetFormat: $format, assetType: $type) {
+                url
             }
         }`;
 
-    graphQLQuery<{uploadUrls: {urls: string[]}}>(
+    graphQLQuery<{uploadUrlForFormat: {url: string}}>(
         query,
-        { count: count },
+        { type, format },
         (result) => {
             if (result.status === 'OK') {
-                callback({ status: 'OK', data: result.data.uploadUrls.urls });
+                callback({ status: 'OK', data: result.data.uploadUrlForFormat.url });
             }
             else {
                 callback(result);
