@@ -25,14 +25,14 @@ library from our CDN. React 15.0.0 or later is required.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
 
-<script src="https://ahcdn.se/sdk-dist/allihoopa-0.4.2.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-1.0.0.min.js"></script>
 ```
 
 We also build a standalone version that wraps all dependencies required by our
 SDK:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-0.4.2.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-1.0.0.min.js"></script>
 ```
 
 
@@ -199,6 +199,30 @@ var piece = new Allihoopa.DropPiece({
                 lower: 4, // Allowed values are 2, 4, 8, 16
             },
         },
+        // If the tonality is known and defined for the piece, provide the
+        // following object:
+        tonality: {
+            mode: 'TONAL', // Other valid values are 'UNKNOWN' and 'ATONAL'
+
+            // C Major scale. Omit scale if you're using an unknown or atonal
+            // mode above.
+            //
+            // A scale is an array of twelve booleans, indicating which pitch
+            // classes are included in the tonality.
+            scale: Allihoopa.getMajorScale(0),
+
+            // The root the tonality, indexed in scale. Omit root if you're
+            // using an unknown or atonal mode above.
+            //
+            // The "root:th" index must be set in the scale array. For example,
+            // setting this to 9 for a C Major scale will define the tonality
+            // to be A minor.
+            //
+            // On allihoopa.com, we will only use the "scale" value to determine
+            // which name to show, so a piece in A minor would still show up
+            // as the key of C.
+            root: 0,
+        }
     },
     attribution: {
         // If this piece is based on other pieces, provide a list of the IDs
@@ -208,6 +232,10 @@ var piece = new Allihoopa.DropPiece({
     },
 });
 ```
+
+For more inoframtion on the tonality representation, read the more detailed
+section in our [iOS SDK
+documentation](https://github.com/allihoopa/Allihoopa-iOS#some-notes-on-tonality).
 
 
 ## Custom drop flow / usage without user interface
@@ -220,7 +248,7 @@ If you're not using NPM to include our SDK, you can refer to the headless
 variant on our CDN for a smaller download:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-0.4.2.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-1.0.0.min.js"></script>
 ```
 
 To drop, use the `Allihoopa.drop` method. It works similar to `AllihoopaUI.drop`

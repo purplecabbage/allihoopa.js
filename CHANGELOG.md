@@ -1,6 +1,17 @@
 Change log
 ==========
 
+## [1.0.0] — 2017-01-20
+
+### Added
+
+* Tonality support when dropping
+
+### Changes
+
+* Webpack, TypeScript, and TSLint packages updated. TypeScript and TSLint
+  pinned to specific versions to avoid future breakage.
+
 ## [0.4.2] — 2017-01-20
 
 ### Bugfixes
@@ -62,3 +73,4 @@ Empty release
 [0.4.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.3.0...v0.4.0
 [0.4.1]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.0...v0.4.1
 [0.4.2]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.1...v0.4.2
+[1.0.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.2...v1.0.0
