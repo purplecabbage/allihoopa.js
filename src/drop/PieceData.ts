@@ -3,6 +3,7 @@ export interface DropPieceData {
     presentation: PresentationData;
     attribution?: AttributionData;
     musicalMetadata: MusicalMetadata;
+    attachment?: AttachmentData;
 }
 
 export type BlobCallback = (data: Blob | null, error: Error | null) => void;
@@ -52,6 +53,11 @@ export type Tonality =
     { mode: 'ATONAL' } |
     { mode: 'TONAL', scale: boolean[], root: number };
 
+export interface AttachmentData {
+    mimeType: string;
+    data: (completion: BlobCallback) => void;
+}
+
 const ALLIHOOPA_SHORT_ID_REGEX = /^https:\/\/allihoopa.com\/s\/([^\/]+)$/;
 
 export class DropPiece {
@@ -59,12 +65,14 @@ export class DropPiece {
     presentation: PresentationData;
     attribution?: AttributionData;
     musicalMetadata: MusicalMetadata;
+    attachment?: AttachmentData;
 
     constructor(data: DropPieceData) {
         this.stems = data.stems;
         this.presentation = data.presentation;
         this.attribution = data.attribution;
         this.musicalMetadata = data.musicalMetadata;
+        this.attachment = data.attachment;
 
         const errors: any[] = [];
         this.validate(errors);
@@ -79,6 +87,7 @@ export class DropPiece {
         this.validatePresentation(errors);
         this.validateAttribution(errors);
         this.validateMusicalMetadata(errors);
+        this.validateAttachment(errors);
     }
 
     private validateStems(errors: string[]) {
@@ -235,6 +244,22 @@ export class DropPiece {
             }
             else if (t.mode !== 'ATONAL' && t.mode !== 'UNKNOWN') {
                 errors.push('Field `mode` of `tonality` on `musicalMetadata` must be one of "unknown", "atonal", or "tonal"');
+            }
+        }
+    }
+
+    private validateAttachment(errors: string[]) {
+        if (this.attachment) {
+            // Do just basic validation for the mimeType as the graphql API validates the rest
+            if (!this.attachment.mimeType) {
+                errors.push('Missing `mimeType` field on `attachment`');
+            }
+            else if (typeof this.attachment.mimeType !== 'string') {
+                errors.push('Field `mimeType` field on `attachment` must be a string');
+            }
+
+            if (!(this.attachment.data instanceof Function)) {
+                errors.push('`data` field on `attachment` must be a function');
             }
         }
     }

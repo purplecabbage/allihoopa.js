@@ -230,6 +230,16 @@ var piece = new Allihoopa.DropPiece({
         // Allihoopa, e.g. `https://allihoopa.com/s/VbUpAmUG`.
         basedOnPieces: [],
     },
+    // You can supply an application specific attachment along the piece
+    // that will be stored in Allihoopa.
+    attachment: {
+        // Pre-registered MIME type of the attachment. If you need one, 
+        // ask it to be registered at developer@allihoopa.com
+        mimeType: 'application/figure',
+        data: function (completion/*(attachmentBlob, error)*/) {
+            // Callback to provide the actual attachment
+        },
+    },
 });
 ```
 
