@@ -348,10 +348,20 @@ export class Coordinator {
         });
     }
 
+    private checkForUploadError(upload: AssetState<any>, name: string) {
+        if (upload.state === 'ERROR') {
+            throw new Error('[Allihoopa SDK] Internal error: ' + name + ' uploading failed caused by \n' + upload.error);
+        }
+    }
+
     private didUpdateState() {
         if (this.isCanceled) {
             return;
         }
+
+        this.checkForUploadError(this.mixStemState, 'mix stem');
+        this.checkForUploadError(this.coverImageState, 'cover image');
+        this.checkForUploadError(this.previewAudioState, 'preview audio');
 
         if (this.committedEditorState && this.initialCoverImageState && !this.isUploadingCoverImage) {
             this.isUploadingCoverImage = true;
