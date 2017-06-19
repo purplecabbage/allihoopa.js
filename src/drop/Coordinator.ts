@@ -53,6 +53,8 @@ export class Coordinator {
     private previewAudioProgress: number = 0;
     private coverImageState: AssetState<ImageAssetFormat> = { state: 'WAITING' };
     private coverImageProgress: number = 0;
+    private attachmentState: AssetState<string> = { state: 'WAITING' };
+    private attachmentProgress: number = 0;
 
     private initialCoverImageState?: Result<Blob | null>;
     private isUploadingCoverImage: boolean = false;
@@ -68,6 +70,7 @@ export class Coordinator {
         this.fetchMixStem();
         this.fetchPreviewAudio();
         this.fetchInitialCoverImage();
+        this.fetchAttachment();
     }
 
     commitEditor(state: EditInfoState) {
@@ -292,6 +295,65 @@ export class Coordinator {
         }
     }
 
+    private fetchAttachment() {
+        if (!this.piece.attachment) {
+            this.attachmentState = { state: 'NO_ASSET' };
+            this.didUpdateState();
+        }
+        else {
+            const mimeType = this.piece.attachment.mimeType;
+            this.piece.attachment.data(
+                (data, error) => this.attachmentDidArrive(mimeType, data, error));
+        }
+    }
+
+    private attachmentDidArrive(mimeType: string, data: Blob | null, error: Error | null) {
+        if (this.isCanceled) {
+            return;
+        }
+
+        if (data) {
+            this.attachmentProgress = FETCH_PROGRESS_PART;
+            this.didUpdateProgress();
+
+            DropAPI.uploadAttachmentResource(
+                data,
+                mimeType,
+                result => {
+                    if (this.isCanceled) {
+                        return;
+                    }
+
+                    if (result.status === 'OK') {
+                        this.attachmentState = {
+                            state: 'DONE',
+                            url: result.data,
+                            asset_type: mimeType,
+                        };
+
+                        this.attachmentProgress = 1;
+                        this.didUpdateProgress();
+                    }
+                    else {
+                        this.attachmentState = { state: 'ERROR', error: result.error };
+                    }
+                    this.didUpdateState();
+                },
+                progress => {
+                    this.attachmentProgress = clampUnit(FETCH_PROGRESS_PART + UPLOAD_PROGRESS_PART * progress);
+                    this.didUpdateProgress();
+                });
+        }
+        else if (error) {
+            this.attachmentState = { state: 'ERROR', error: error };
+            this.didUpdateState();
+        }
+        else {
+            this.attachmentState = { state: 'NO_ASSET' };
+            this.didUpdateState();
+        }
+    }
+
     private createPiece() {
         if (this.mixStemState.state !== 'DONE') {
             throw new Error('[Allihoopa SDK] Internal error: can not create piece without mix stem');
@@ -340,6 +402,14 @@ export class Coordinator {
             },
         };
 
+        if (this.attachmentState.state === 'DONE') {
+            const attachment = {
+                mimeType: this.attachmentState.asset_type,
+                url: this.attachmentState.url,
+            };
+            pieceInput.attachment = attachment;
+        }
+
         DropAPI.dropPiece(pieceInput, result => {
             this.isUploading = false;
             this.createPieceResult = result;
@@ -348,10 +418,21 @@ export class Coordinator {
         });
     }
 
+    private checkForUploadError(upload: AssetState<any>, name: string) {
+        if (upload.state === 'ERROR') {
+            throw new Error('[Allihoopa SDK] Internal error: ' + name + ' uploading failed caused by \n' + upload.error);
+        }
+    }
+
     private didUpdateState() {
         if (this.isCanceled) {
             return;
         }
+
+        this.checkForUploadError(this.mixStemState, 'mix stem');
+        this.checkForUploadError(this.coverImageState, 'cover image');
+        this.checkForUploadError(this.previewAudioState, 'preview audio');
+        this.checkForUploadError(this.attachmentState, 'attachment');
 
         if (this.committedEditorState && this.initialCoverImageState && !this.isUploadingCoverImage) {
             this.isUploadingCoverImage = true;
@@ -361,7 +442,8 @@ export class Coordinator {
         const allUploadsComplete = (
             this.mixStemState.state === 'DONE' &&
             (this.coverImageState.state === 'DONE' || this.coverImageState.state === 'NO_ASSET') &&
-            (this.previewAudioState.state === 'DONE' || this.previewAudioState.state === 'NO_ASSET')
+            (this.previewAudioState.state === 'DONE' || this.previewAudioState.state === 'NO_ASSET') &&
+            (this.attachmentState.state === 'DONE' || this.attachmentState.state === 'NO_ASSET')
         );
 
         if (allUploadsComplete && !this.isUploading && !this.createPieceResult) {
@@ -405,6 +487,11 @@ export class Coordinator {
         if (this.previewAudioState.state !== 'NO_ASSET') {
             uploads += 1;
             uploadProgress += this.previewAudioProgress;
+        }
+
+        if (this.attachmentState.state !== 'NO_ASSET') {
+            uploads += 1;
+            uploadProgress += this.attachmentProgress;
         }
 
         progress += (uploadProgress / uploads) * ALL_UPLOADS_PROGRESS_PART;

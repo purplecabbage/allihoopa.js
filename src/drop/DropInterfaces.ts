@@ -13,6 +13,7 @@ export interface PieceInput {
     presentation: PresentationDataInput;
     attribution?: AttributionDataInput;
     musicalMetadata: MusicalMetadataInput;
+    attachment?: AttachmentResourceInput;
 }
 
 export interface AudioResourceInput {
@@ -74,4 +75,9 @@ export interface TonalityInput {
 export interface TonalityDataInput {
     scale: boolean[];
     root: number;
+}
+
+export interface AttachmentResourceInput {
+    mimeType: string;
+    url: string;
 }

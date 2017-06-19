@@ -1,10 +1,11 @@
-import {DropPiece, DropPieceData} from '../src/drop/PieceData';
+import {DropPiece, DropPieceData, BlobCallback} from '../src/drop/PieceData';
 import {getMajorScale} from '../src/piece/tonality';
 
 describe('DropPiece validation', () => {
     it('validates the minimal metadata', () => {
         const md = minimalValidMetadata();
         const p = new DropPiece(md);
+        expect(p.attachment).toEqual(md.attachment);
         expect(p.attribution).toEqual(md.attribution);
         expect(p.musicalMetadata).toEqual(md.musicalMetadata);
         expect(p.presentation).toEqual(md.presentation);
@@ -262,6 +263,26 @@ describe('DropPiece validation', () => {
             const md = minimalValidMetadata() as any;
             md.presentation.title = 123;
             expect(() => new DropPiece(md)).toThrowError(/title/);
+        });
+    });
+
+    describe('attachment', () => {
+        it('accepts attachment callback', () => {
+            const md = minimalValidMetadata();
+            md.attachment = { mimeType: 'application/figure', data: (callback: BlobCallback) => {}};
+            expect(() => new DropPiece(md)).not.toThrow();
+        });
+
+        it('rejects attachment data of invalid type', () => {
+            const md = minimalValidMetadata() as any;
+            md.attachment = { mimeType: 'application/figure', data: 'banana'};
+            expect(() => new DropPiece(md)).toThrowError(/attachment/);
+        });
+
+        it('rejects attachment mimeType of invalid type', () => {
+            const md = minimalValidMetadata() as any;
+            md.attachment = { mimeType: {}, data: (callback: BlobCallback) => {}};
+            expect(() => new DropPiece(md)).toThrowError(/attachment/);
         });
     });
 

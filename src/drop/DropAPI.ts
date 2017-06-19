@@ -23,6 +23,7 @@ export function uploadResource(
             uploadFile(
                 url,
                 data,
+                null,
                 (result) => {
                     if (result.status === 'OK') {
                         completionCallback({ status: 'OK', data: url });
@@ -64,12 +65,71 @@ export function getUrl(type: SongAssetType, format: SongAssetFormat, callback: R
     );
 }
 
+export function uploadAttachmentResource(
+    data: Blob,
+    mimeType: string,
+    completionCallback: ResultCallback<string>,
+    progressCallback: ProgressCallback,
+) {
+    const GET_URL_PROGRESS = 0.1;
+    const UPLOAD_FILE_PROGRESS = 0.9;
+
+    getUrlForAttachment(mimeType, (result) => {
+        if (result.status === 'OK') {
+            progressCallback(GET_URL_PROGRESS);
+            const url = result.data;
+            uploadFile(
+                url,
+                data,
+                mimeType,
+                (result) => {
+                    if (result.status === 'OK') {
+                        completionCallback({ status: 'OK', data: url });
+                    }
+                    else {
+                        completionCallback(result);
+                    }
+                },
+                (progress: number) => progressCallback(
+                    clampUnit(GET_URL_PROGRESS + progress * UPLOAD_FILE_PROGRESS),
+                ),
+            );
+        }
+        else {
+            completionCallback(result);
+        }
+    });
+}
+
+export function getUrlForAttachment(mimeType: String, callback: ResultCallback<string>) {
+    const query = `
+        mutation ($mimeType: String!) {
+            uploadUrlForAttachment(mimeType: $mimeType) {
+                url
+            }
+        }`;
+
+    graphQLQuery<{uploadUrlForAttachment: {url: string}}>(
+        query,
+        { mimeType },
+        (result) => {
+            if (result.status === 'OK') {
+                callback({ status: 'OK', data: result.data.uploadUrlForAttachment.url });
+            }
+            else {
+                callback(result);
+            }
+        },
+    );
+}
+
 export type CompletionCallback = (successful: boolean) => void;
 export type ProgressCallback = (progress: number) => void;
 
 export function uploadFile(
     url: string,
     data: Blob,
+    mimeType: string | null,
     completionCallback: ResultCallback<null>,
     progressCallback: ProgressCallback,
 ) {
@@ -90,6 +150,9 @@ export function uploadFile(
         if (reader.result instanceof ArrayBuffer) {
             const xhr = new XMLHttpRequest();
             xhr.open('PUT', url);
+            if (mimeType !== null) {
+                xhr.setRequestHeader('Content-Type', mimeType);
+            }
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
