@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## [1.1.0] — 2017-01-20
+
+### Added
+
+* Support for dropping application specific attachments
+
 ## [1.0.0] — 2017-01-20
 
 ### Added
@@ -74,3 +80,4 @@ Empty release
 [0.4.1]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.0...v0.4.1
 [0.4.2]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.1...v0.4.2
 [1.0.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.2...v1.0.0
+[1.1.0]: https://github.com/allihoopa/allihoopa.js/compare/v1.0.0...v1.1.0
