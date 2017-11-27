@@ -278,3 +278,7 @@ Allihoopa.drop(
 
 The provided `piece` argument is an instance of `Allihoopa.DropPiece`, described
 above.
+
+## Pre-Release Checklist
+
+When you’re getting close to releasing your app, we would like you to go over this [pre-release checklist](https://gist.github.com/ReMarkus/ec375c31277cc46cfcc026e69f67c01a) to verify that you’ve integrated our SDK correctly.
