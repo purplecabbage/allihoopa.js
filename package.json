@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "clean": "./scripts/clean.sh",
-    "prepublish": "./scripts/build.sh",
+    "prepare": "./scripts/build.sh",
     "build:watch": "webpack --watch",
     "tsc:watch": "tsc --declaration --watch",
     "test:travis-browsers": "karma start --single-run --browsers Firefox,PhantomJS,Chrome_travis_ci",
@@ -29,7 +29,8 @@
   },
   "files": [
     "dist/",
-    "lib/"
+    "lib/",
+    "index.d.ts"
   ],
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
@@ -44,6 +45,7 @@
     "tslint-loader": "^3.3.0",
     "typed-css-modules": "^0.1.12",
     "typescript": "==2.6.2",
+    "@types/jasmine": "^2.8.3",
     "watchify": "^3.7.0",
     "webpack": "^2.2.1",
     "webpack-fail-plugin": "^1.0.5",
@@ -56,7 +58,6 @@
     "react-frame-component": "^2.0.1"
   },
   "dependencies": {
-    "@types/jasmine": "^2.8.3",
     "@types/radium": "^0.18.23",
     "@types/react-dom": "^16.0.3"
   }
