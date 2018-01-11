@@ -13,7 +13,7 @@ export interface CoverImageEditorProps {
 }
 
 @Radium
-export class CoverImageEditor extends React.Component<CoverImageEditorProps, void> {
+export class CoverImageEditor extends React.Component<CoverImageEditorProps> {
     imageInput: HTMLInputElement | null;
 
     render(): JSX.Element {
@@ -47,7 +47,7 @@ export class CoverImageEditor extends React.Component<CoverImageEditorProps, voi
         );
     }
 
-    private handleImageInput(e: React.FormEvent): void {
+    private handleImageInput(e: React.FormEvent<HTMLInputElement>): void {
         const files = (e.target as HTMLInputElement).files;
         if (!files) {
             return;
@@ -63,7 +63,7 @@ export class CoverImageEditor extends React.Component<CoverImageEditorProps, voi
         });
     }
 
-    private handleOpenFileBrowser(e: React.SyntheticEvent): void {
+    private handleOpenFileBrowser(e: React.SyntheticEvent<HTMLButtonElement>): void {
         e.preventDefault();
 
         const coverImageInput = this.imageInput;

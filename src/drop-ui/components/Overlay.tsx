@@ -1,11 +1,13 @@
 import {StyleRoot} from 'radium';
 import * as React from 'react';
 
+import { HTMLAttributes } from 'react';
 import * as CommonStyles from '../styles/CommonStyles';
 
+declare function require(path: string): any;
 const Frame = require('react-frame-component');
 
-export class Overlay extends React.Component<void, void> {
+export class Overlay extends React.Component<HTMLAttributes<HTMLFrameElement>> {
     render() {
         return (
             <Frame

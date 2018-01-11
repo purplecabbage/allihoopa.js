@@ -9,12 +9,14 @@
         "noImplicitReturns": true,
         "preserveConstEnums": true,
         "outDir": "lib",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "types": [
+            "jasmine"
+        ]
     },
     "include": [
         "src/**/*",
-        "test/**/*",
-        "typings/index.d.ts"
+        "test/**/*"
     ],
     "exclude": [
         "node_modules"

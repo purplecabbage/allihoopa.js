@@ -6,12 +6,12 @@ export enum LogoMode {
     WhiteMonochrome,
 }
 
-export interface AllihoopaLogoProps extends React.HTMLAttributes {
+export interface AllihoopaLogoProps extends React.HTMLAttributes<SVGElement> {
     mode?: LogoMode;
 }
 
 @Radium
-export class AllihoopaLogo extends React.Component<AllihoopaLogoProps, void> {
+export class AllihoopaLogo extends React.Component<AllihoopaLogoProps> {
     render(): JSX.Element {
         let mode = this.props.mode || LogoMode.Default;
 

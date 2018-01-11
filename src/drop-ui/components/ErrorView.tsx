@@ -8,7 +8,7 @@ export interface ErrorProps {
 }
 
 @Radium
-export class ErrorView extends React.Component<ErrorProps, void> {
+export class ErrorView extends React.Component<ErrorProps> {
     render() {
         return (
             <div style={[CommonStyles.CENTERED_CONTAINER_STYLE, VIEW_STYLE]}>
@@ -51,7 +51,7 @@ const BUTTON_STYLE: React.CSSProperties = {
     color: CommonStyles.DUSTY_GRAY_COLOR,
 };
 
-const CONTAINER_STYLE = {
+const CONTAINER_STYLE: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

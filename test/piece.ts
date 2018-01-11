@@ -1,4 +1,8 @@
-import {DropPiece, DropPieceData, BlobCallback} from '../src/drop/PieceData';
+import {
+    BlobCallback,
+    DropPiece,
+    DropPieceData,
+} from '../src/drop/PieceData';
 import {getMajorScale} from '../src/piece/tonality';
 
 describe('DropPiece validation', () => {

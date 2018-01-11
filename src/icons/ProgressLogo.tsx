@@ -2,7 +2,7 @@ import * as Radium from 'radium';
 import * as React from 'react';
 
 @Radium
-export class ProgressLogo extends React.Component<React.HTMLAttributes, void> {
+export class ProgressLogo extends React.Component<React.HTMLAttributes<HTMLDivElement>> {
     render() {
         return (
             <div {...this.props}>
