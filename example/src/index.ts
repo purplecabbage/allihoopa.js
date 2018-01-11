@@ -93,9 +93,9 @@ function makeDropPiece(): Allihoopa.DropPiece {
         },
         presentation: {
             title: 'A test piece',
-            coverImage: (completion: (data: Blob | null) => void) => {
+            coverImage: (completion: (data: Blob | null, error: Error | null) => void) => {
                 if (coverImageInput.files) {
-                    completion(coverImageInput.files[0]);
+                    completion(coverImageInput.files[0], null);
                 }
             },
         },
@@ -138,9 +138,9 @@ function makeDropPieceWithAttachment(): Allihoopa.DropPiece {
         },
         presentation: {
             title: 'A test piece',
-            coverImage: (completion: (data: Blob | null) => void) => {
+            coverImage: (completion: (data: Blob | null, error: Error | null) => void) => {
                 if (coverImageInput.files) {
-                    completion(coverImageInput.files[0]);
+                    completion(coverImageInput.files[0], null);
                 }
             },
         },
