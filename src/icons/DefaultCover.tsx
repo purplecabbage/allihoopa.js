@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export class DefaultCover extends React.Component<React.HTMLAttributes, void> {
+export class DefaultCover extends React.Component<React.HTMLAttributes<SVGElement>> {
     render() {
         return (
             <svg

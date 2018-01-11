@@ -56,7 +56,7 @@ class JPEGParser {
         }
 
         let ident = this.data[this.pos + 1];
-        let size: number | null = null;
+        let size: number = 0;
 
         if (ident === 0xe0 || ident === 0xe1 || ident === 0xe2) {
             size = 256 * this.data[this.pos + 2] + this.data[this.pos + 3];

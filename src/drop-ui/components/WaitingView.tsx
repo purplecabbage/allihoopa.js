@@ -6,7 +6,7 @@ import * as CommonStyles from '../styles/CommonStyles';
 import {ProgressLogo} from '../../icons/ProgressLogo';
 
 @Radium
-export class WaitingView extends React.Component<void, void> {
+export class WaitingView extends React.Component<any> {
     render() {
         return (
             <div style={[CommonStyles.CENTERED_CONTAINER_STYLE, CONTAINER_STYLE]}>

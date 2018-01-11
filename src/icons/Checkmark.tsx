@@ -2,7 +2,7 @@ import * as Radium from 'radium';
 import * as React from 'react';
 
 @Radium
-export class Checkmark extends React.Component<React.HTMLAttributes, void> {
+export class Checkmark extends React.Component<React.HTMLAttributes<SVGElement>> {
     render(): JSX.Element {
         return (
             <svg

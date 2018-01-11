@@ -498,7 +498,7 @@ export class Coordinator {
 
         this.onProgress(clampUnit(progress));
     }
-};
+}
 
 function mimeToAudioAssetType(mime: string): AudioAssetFormat {
     if (mime === 'audio/x-wav' || mime === 'audio/wav') {

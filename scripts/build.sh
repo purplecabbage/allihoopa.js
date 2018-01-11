@@ -27,7 +27,6 @@ WEBPACK=./node_modules/.bin/webpack
 
 ./scripts/clean.sh
 
-./node_modules/.bin/typings install
 ./node_modules/.bin/tsc --declaration
 
 $WEBPACK $WEBPACK_EXTRA

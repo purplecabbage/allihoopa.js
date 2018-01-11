@@ -13,7 +13,7 @@ export interface ModalTextEditorProps {
 }
 
 @Radium
-export class ModalTextEditor extends React.Component<ModalTextEditorProps, void> {
+export class ModalTextEditor extends React.Component<ModalTextEditorProps> {
     textarea: HTMLTextAreaElement;
     navbar: HTMLElement;
 
@@ -26,7 +26,7 @@ export class ModalTextEditor extends React.Component<ModalTextEditorProps, void>
             <div style={OVERLAY_STYLE}>
                 <div
                     style={NAVBAR_STYLE}
-                    ref={elem => this.navbar = elem}
+                    ref={elem => elem ? this.navbar = elem : null}
                 >
                     <span style={COUNTER_STYLE}>{this.props.maxLength - this.props.value.length}</span>
                     <button
@@ -42,7 +42,7 @@ export class ModalTextEditor extends React.Component<ModalTextEditorProps, void>
                 <textarea
                     value={this.props.value}
                     style={[CommonStyles.INPUT_RESET_STYLE, TEXTAREA_STYLE, this.props.extraTextareaStyle]}
-                    ref={elem => this.textarea = elem}
+                    ref={elem => elem ? this.textarea = elem : null}
                     maxLength={this.props.maxLength}
                     onChange={e => this.props.onChange((e.target as HTMLTextAreaElement).value)}
                     onFocus={() => this.scrollToTop()}

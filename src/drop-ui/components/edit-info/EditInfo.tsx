@@ -135,7 +135,7 @@ export class EditInfo extends React.Component<EditInfoProps, EditInfoState> {
     }
 
 
-    private handleDropClick(e: React.SyntheticEvent): void {
+    private handleDropClick(e: React.SyntheticEvent<HTMLButtonElement>): void {
         e.preventDefault();
 
         this.props.onCommit(this.state);
