@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
         "declaration": false,
-        "module": "commonjs",
+        "module": "es6",
+        "moduleResolution": "node",
         "jsx": "react",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": true,
         "strictNullChecks": true,
         "noImplicitReturns": true,

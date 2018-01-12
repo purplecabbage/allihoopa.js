@@ -4,10 +4,10 @@ import * as React from 'react';
 import { HTMLAttributes } from 'react';
 import * as CommonStyles from '../styles/CommonStyles';
 
-declare function require(path: string): any;
-const Frame = require('react-frame-component');
+// See "typings.d.ts" for declaration
+import Frame from 'react-frame-component';
 
-export class Overlay extends React.Component<HTMLAttributes<HTMLFrameElement>> {
+export class Overlay extends React.Component<HTMLAttributes<HTMLIFrameElement>> {
     render() {
         return (
             <Frame
@@ -26,7 +26,7 @@ export class Overlay extends React.Component<HTMLAttributes<HTMLFrameElement>> {
     }
 }
 
-const IFRAME_STYLE = {
+const IFRAME_STYLE: React.CSSProperties = {
     position: 'absolute',
     width: '100%',
     height: '100%',
