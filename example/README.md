@@ -15,20 +15,21 @@ git clone git@github.com:allihoopa/allihoopa.js.git
 cd allihoopa.js
 
 # Install all dependencies
-npm install
+yarn install
 
 # Add a development link on your machine
 # NOTE: This might require sudo on your machine
-npm link
+yarn link
 
 # Go to the example
 cd example
 
-# Install dependencies
-npm install
-
 # Install the Allihoopa SDK as a link
-npm link allihoopa 
+yarn link allihoopa 
+
+# Install dependencies
+yarn install
+
 ```
 
 ...and the setup is complete. This sets up a symlink in `node_modules/allihoopa`

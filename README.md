@@ -14,8 +14,10 @@ You can use this SDK in three different ways. If you use e.g. Webpack or
 Browserify, you can use the NPM module directly. We export [TypeScript] type
 definitions, if you use it this way.
 
+We use [Yarn](https://yarnpkg.com) instead of npm throughout the SDK to handle depencendies. You can of course still use `npm` to install the SDK.
+
 ```bash
-npm install --save allihoopa
+yarn add allihoopa
 ```
 
 If you have no build system but use React on your site, you can include the

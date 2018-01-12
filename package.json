@@ -37,7 +37,6 @@
     "@types/jasmine": "^2.8.3",
     "jasmine-core": "^2.5.2",
     "karma": "^2.0.0",
-    "karma-browserify": "^5.1.0",
     "karma-jasmine": "^1.0.2",
     "karma-webpack": "^2.0.9",
     "ts-loader": "^3.2.0",
@@ -51,14 +50,11 @@
     "webpack-fail-plugin": "^2.0.0",
     "yargs": "^6.6.0"
   },
-  "optionalDependencies": {
+  "dependencies": {
+    "@types/radium": "^0.18.23",
+    "@types/react-dom": "^16.0.3",
     "radium": "^0.21.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-frame-component": "^2.0.1"
-  },
-  "dependencies": {
-    "@types/radium": "^0.18.23",
-    "@types/react-dom": "^16.0.3"
-  }
+    "react-frame-component": "^2.0.1"  }
 }
