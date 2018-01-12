@@ -1,13 +1,22 @@
 Change log
 ==========
 
-## [1.1.0] — 2017-01-20
+## [1.2.0] - 2018-01-12
+
+### Changes
+
+* All packages updated
+* TypeScript is now at 2.6.2
+* Made React and Radium required dependencies again
+* Fixed importing from TypeScript
+
+## [1.1.0] — 2017-06-19
 
 ### Added
 
 * Support for dropping application specific attachments
 
-## [1.0.0] — 2017-01-20
+## [1.0.0] — 2017-02-02
 
 ### Added
 
@@ -81,3 +90,4 @@ Empty release
 [0.4.2]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.1...v0.4.2
 [1.0.0]: https://github.com/allihoopa/allihoopa.js/compare/v0.4.2...v1.0.0
 [1.1.0]: https://github.com/allihoopa/allihoopa.js/compare/v1.0.0...v1.1.0
+[1.2.0]: https://github.com/allihoopa/allihoopa.js/compare/v1.1.0...v1.2.0
