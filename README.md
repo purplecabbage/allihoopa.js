@@ -21,20 +21,20 @@ yarn add allihoopa
 ```
 
 If you have no build system but use React on your site, you can include the
-library from our CDN. React 15.0.0 or later is required.
+library from our CDN. React 16.0.0 or later is required.
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/react-dom.min.js"></script>
 
-<script src="https://ahcdn.se/sdk-dist/allihoopa-1.1.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-1.2.0.min.js"></script>
 ```
 
 We also build a standalone version that wraps all dependencies required by our
 SDK:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-1.1.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-standalone-1.2.0.min.js"></script>
 ```
 
 
@@ -260,7 +260,7 @@ If you're not using NPM to include our SDK, you can refer to the headless
 variant on our CDN for a smaller download:
 
 ```html
-<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-1.1.0.min.js"></script>
+<script src="https://ahcdn.se/sdk-dist/allihoopa-headless-1.2.0.min.js"></script>
 ```
 
 To drop, use the `Allihoopa.drop` method. It works similar to `AllihoopaUI.drop`
