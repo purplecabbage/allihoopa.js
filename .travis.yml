@@ -19,6 +19,8 @@ script:
 
 deploy:
   - provider: s3
+    skip_cleanup: true
+
     access_key_id:
       secure: "QfRA20W12rl2fWcXWFr0EmFt4ymM4XNi5nLfaZkIwd6/JHuXSY87SU3aQe14XqNGlTIh8VEqm8jK7FwUsqWoLkVXYrWBnh+HftXBxgdRbY8lIYeFJRxlPi59FZoEq30SPVR9TbbClHimg9jU5szAUncc8+iDoemdvkiDrs19y6ptdY7JQQMuw33XGru7PuHVLLseaS9kE8zjp+9A4TAM2cTZ42g9T8gsFyKz2+B2MfVmujcsgmOcpF0v7stbfahaFoUeoOTYkY/fT6kXmXa/d62c1d3jazLy3UUR3vsG4dGpOtxKhyPncYYT3GbEiEfsffIUfiY5gbeLU9JPkLATOyjXm2Xq6+MOr0LULz6BGDaflU7BmM+/asS4BzIg6sx0qP3wxQIzc6Ukg6421fGja3p5aJZxditd/P/H31s3SOEX1bn2I9xTn5FxQL105x9UmXBLNkZU0fwUErlXKb9GRSCpA1/kWZs9AXOt53RufMyLBri3q5DLvCtynKdDINP0lt/CO8mqyCm3TXuiBqutmUpczm8zdeFREZspyImmCK+pyr/+GwVUc409dQLtCpBFpvFCIYHmviy+CRc6fJTyeJA6Arm8pIctSAnybvZd+hMd8QpyEie5srcTCKhtedDg9x6w776xgVkMp34ydK6MKUg1lRk2BhalkQO8dqK4Xg0="
     secret_access_key:
@@ -33,6 +35,8 @@ deploy:
       condition: "$BUILD_LEADER == yes"
 
   - provider: npm
+    skip_cleanup: true
+
     email: alibaaba@allihoopa.com
     api_key:
       secure: "R/4cfkE4nwSRDO+bpAN5GW3AHpqTGOy9KXYBgMYmBZc9uEHAsSM4LyQpCZpQ9v2xWiGJr5/dFPOvjYf1UUizIVINqRyIN2A9p8fNOrL2IeQO1w2HKo9BoG85Zu7EO/0W2KQgWgTxDwlOT7c5r9c7GBw8+a9rKrvIQMuvcb37e+2NVrZje0WJHiObk4iSY9kQxjT20E5n9Z+rDz8QVCz2yY8oY4j0ZKVRtbJ7GZTds1WNxbxI080SQ1Ab+mZ27QCRF+E3BDCF/A6mF+xDd4f2U83JVKQooNd0H91/ccDCw2VTax0fUycWb2DmHYEPFITqzKtYLRTrFt+MxpFdodGMfuQvBhVOpmrBtE9IvIps10MY1w8c0BINbSZ0tkDA/7vw4O6ap3MfqZ0GKR5ne0Gn+yM4K1GFZHxW8BJ5Okszy15DIhtE9ezfx4WF5v+xnqfHIk6GGN9rT4wQY+3iBiQPpW1AEE56rVefHQVVYoKSrSdIPN9sWqvwLrlOV2YibTnckDw6GbxIWW9ykPMxZffv/Sf58l0OWPIL0e+8mhK7cpVTyAkMQNg5Odg0daAveBgQKR+c/oNM6QwUAkv1DXjZdkgbH+WXyw/5cbyq6hsvHRh/WPh3IvMqx++2zcJkqhIO8l/V3JRRFHHWim/aLNukw1v0m/Cf9iG0GuI57jRX3zs="
