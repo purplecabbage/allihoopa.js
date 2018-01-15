@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "clean": "./scripts/clean.sh",
-    "prepare": "./scripts/build.sh",
+    "prepublish": "./scripts/build.sh",
     "build:watch": "webpack --watch",
     "tsc:watch": "tsc --declaration --watch",
     "test:travis-browsers": "karma start --single-run --browsers Firefox,PhantomJS,Chrome_travis_ci",

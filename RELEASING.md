@@ -17,7 +17,7 @@ there are some manual preparations that need to be done first:
    at the diff of the changelog to see how this has been done before.
 4. Commit these changes with a message like "Release version X.Y.Z"
 5. Wait for Travis to okay the build.
-6. Add the tag X.Y.Z to the commit and push the tag.
+6. Add the tag vX.Y.Z to the commit and push the tag.
 7. Wait for Travis to finish the build.
 8. You're done!
 
