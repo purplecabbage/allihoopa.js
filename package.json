@@ -1,6 +1,6 @@
 {
   "name": "allihoopa",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "SDK for the Allihoopa service",
   "homepage": "https://github.com/allihoopa/allihoopa.js",
   "keywords": [
@@ -30,7 +30,10 @@
   "files": [
     "dist/",
     "lib/",
-    "index.d.ts"
+    "index.d.ts",
+    "index.js",
+    "ui.d.ts",
+    "ui.js"
   ],
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
