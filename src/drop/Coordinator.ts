@@ -501,7 +501,7 @@ export class Coordinator {
 }
 
 function mimeToAudioAssetType(mime: string): AudioAssetFormat {
-    if (mime === 'audio/x-wav' || mime === 'audio/wav') {
+    if (mime === 'audio/x-wav' || mime === 'audio/wav' || mime === 'audio/wave') {
         return 'wav';
     }
     else if (mime === 'audio/x-ogg' || mime === 'audio/ogg') {

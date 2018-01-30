@@ -10,8 +10,10 @@ import {Controller} from './components/Controller';
 import {Overlay} from './components/Overlay';
 
 export type DropCallback = (successful: boolean) => void;
+export type AuthCallback = (successful: boolean) => void;
+export type AuthHandler = (callback: AuthCallback) => void;
 
-export function drop(piece: DropPiece, callback: DropCompletionCallback) {
+export function drop(piece: DropPiece, callback: DropCompletionCallback, authHandler: AuthHandler = authenticate) {
     if (!piece) {
         throw new Error('Piece argument not provided');
     }
@@ -21,10 +23,14 @@ export function drop(piece: DropPiece, callback: DropCompletionCallback) {
     }
 
     if (callback && !(callback instanceof Function)) {
-        throw new Error('Provided callback is not a function');
+        throw new Error('Provided completion callback is not a function');
     }
 
-    authenticate(success => {
+    if (!(authHandler instanceof Function)) {
+        throw new Error('Provided auth handler is not a function')
+    }
+
+    authHandler(success => {
         if (success) {
             renderDrop(piece, callback);
         }
