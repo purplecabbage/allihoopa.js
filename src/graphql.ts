@@ -28,7 +28,12 @@ export function graphQLQuery<T>(
 
     xhr.onload = () => {
         if (xhr.status === 200) {
-            callback({ status: 'OK', data: xhr.response.data });
+            let response = xhr.response;
+            // IE special handling
+            if (typeof response === 'string') {
+                response = JSON.parse(response);
+            }
+            callback({ status: 'OK', data: response.data });
         } else {
             callback({ status: 'ERROR', error: new Error(xhr.response) });
         }

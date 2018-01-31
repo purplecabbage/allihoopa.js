@@ -27,7 +27,7 @@ export function drop(piece: DropPiece, callback: DropCompletionCallback, authHan
     }
 
     if (!(authHandler instanceof Function)) {
-        throw new Error('Provided auth handler is not a function')
+        throw new Error('Provided auth handler is not a function');
     }
 
     authHandler(success => {

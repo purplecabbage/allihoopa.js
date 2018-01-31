@@ -49,6 +49,9 @@ module.exports = {
                 tslint: {
                     emitErrors: true,
                     failOnHint: true,
+                    rules: {
+                        "linebreak-style": false,
+                    }
                 },
             },
         }),

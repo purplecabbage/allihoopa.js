@@ -57,7 +57,7 @@
             "check-type"
         ],
         "eofline": true,
-        "linebreak-style": [true, "LF"],
+        "linebreak-style": false,
         "trailing-comma": [true, {"multiline": "always"}],
         "no-angle-bracket-type-assertion": true,
         "ordered-imports": [true, {"import-sources-order": "lowercase-first"}]
